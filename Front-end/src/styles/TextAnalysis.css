@@ -1,0 +1,31 @@
+.textmainCon {
+  height: 100vh;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.textSeconCon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid black;
+  height: 500px;
+  width: 82rem;
+  gap: 10px;
+}
+
+.resultDiv {
+  border: 2px solid black;
+}
+
+.secondDivtext {
+  border: 2px solid black;
+  display: flex;
+  height: 500px;
+  width: 82rem;
+  justify-content: center;
+  align-items: end;
+}

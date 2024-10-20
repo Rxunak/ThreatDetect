@@ -1,0 +1,102 @@
+.mainContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  height: 100vh;
+}
+
+.firstContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+  width: 500px;
+  height: 300px;
+}
+
+.secondaryContainer {
+  margin-top: 5px;
+  width: 500px;
+  height: 500px;
+}
+
+.image {
+  width: 500px;
+  height: 500px;
+  border-radius: 1rem;
+}
+
+/* .btnDes {
+  border: 2px solid black;
+} */
+
+.h1Heading {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #5dade2;
+  font-size: 2.5rem;
+}
+
+.headingDescription {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  color: rgb(90, 89, 89);
+}
+
+.option {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+  color: #5dade2;
+  font-size: 20px;
+}
+
+.button1 {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.live1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #5dade2;
+  border-radius: 1rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  color: white;
+  width: 110px;
+  height: 50px;
+}
+
+.text1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #5dade2;
+  border-radius: 1rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  color: white;
+  width: 110px;
+  height: 50px;
+}
+
+.button1 li {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.button1 li:hover {
+  color: black;
+}
+
+.test {
+  height: 100px;
+}

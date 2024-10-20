@@ -1,0 +1,22 @@
+.mainfooter {
+  display: flex;
+  height: auto;
+  align-items: last baseline;
+}
+
+.footer {
+  display: flex;
+  gap: 10px;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 2px;
+  width: 100%;
+  height: 200px;
+  background-color: #17202a;
+}
+
+.footer > div {
+  border: 2px solid black;
+  width: 100px;
+  height: 50px;
+}
