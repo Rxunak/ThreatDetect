@@ -1,14 +1,3 @@
-// This file containes the entry point of the application that initialise the
-// server and connects all the parts such as config, routes etc.
-
-// require("dotenv").config();
-// const express = require("express");
-// const connectDB = require("./config/db");
-// const detectionRoutes = require("./routes/detectionRoutes");
-// const userRoutes = require("./routes/userRoutes");
-// const textAnalysisRoutes = require("./routes/textAnalysisRoutes");
-// const cors = require("cors");
-
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
