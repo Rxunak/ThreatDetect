@@ -1,16 +1,15 @@
 // This file defines the endpoint UTLS that trigger the actions like Save data
 // get data from my controller
-
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   saveDetection,
   getDetections,
   getDetectionsId,
   updateDetections,
   deleteDetections,
-} = require("../controllers/detectionController");
+} from "../controllers/detectionController.js";
 
+const router = express.Router();
 router.post("/", saveDetection);
 
 router.get("/", getDetections);
@@ -20,5 +19,4 @@ router.get("/:id", getDetectionsId);
 router.put("/:id", updateDetections);
 
 router.delete("/:id", deleteDetections);
-
-module.exports = router;
+export default router;

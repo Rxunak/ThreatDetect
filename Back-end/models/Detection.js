@@ -1,6 +1,6 @@
 // This file containes the schema and structure of my database collections.
 
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const detectionSchema = new mongoose.Schema({
   itemDetected: {
@@ -8,11 +8,17 @@ const detectionSchema = new mongoose.Schema({
     required: true,
   },
 
+  getUserID: {
+    type: String,
+    required: true,
+  },
+
   timestamp: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
 });
 
 const Detection = mongoose.model("Detection", detectionSchema);
-module.exports = Detection;
+
+export default Detection;

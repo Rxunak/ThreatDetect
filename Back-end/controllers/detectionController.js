@@ -1,12 +1,21 @@
 // This file holds the logic for handling requests and responses for different routes
+import Detection from "../models/Detection.js";
 
-const Detection = require("../models/Detection");
+import { sendEmailAlert } from "../Email/EmailRoute.js";
 
-exports.saveDetection = async (req, res) => {
+export const saveDetection = async (req, res) => {
   try {
-    const { itemDetected } = req.body;
-    const newDetection = new Detection({ itemDetected });
+    const { itemDetected, getUserID } = req.body;
+    console.log(itemDetected);
+    const newDetection = new Detection({ itemDetected, getUserID });
+    console.log(newDetection);
     await newDetection.save();
+
+    await sendEmailAlert(
+      "bandodcarraunak@gmail.com",
+      "New Detection Alert",
+      `A new detection has been identified: ${itemDetected} by user ${getUserID}`
+    );
     res
       .status(201)
       .json({ message: "Detection succesfully saved", newDetection });
@@ -15,7 +24,7 @@ exports.saveDetection = async (req, res) => {
   }
 };
 
-exports.getDetections = async (req, res) => {
+export const getDetections = async (req, res) => {
   try {
     const detections = await Detection.find();
     res.status(200).json(detections);
@@ -24,7 +33,7 @@ exports.getDetections = async (req, res) => {
   }
 };
 
-exports.getDetectionsId = async (req, res) => {
+export const getDetectionsId = async (req, res) => {
   try {
     const { id } = req.params;
     const detections = await Detection.findById(id);
@@ -37,7 +46,7 @@ exports.getDetectionsId = async (req, res) => {
   }
 };
 
-exports.updateDetections = async (req, res) => {
+export const updateDetections = async (req, res) => {
   try {
     const { id } = req.params;
     const detections = await Detection.findByIdAndUpdate(id, req.body);
@@ -51,7 +60,7 @@ exports.updateDetections = async (req, res) => {
   }
 };
 
-exports.deleteDetections = async (req, res) => {
+export const deleteDetections = async (req, res) => {
   try {
     const { id } = req.params;
     const detections = await Detection.findByIdAndDelete(id);
