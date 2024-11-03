@@ -1,7 +1,7 @@
 // This is my config file where i have all the configuration settings to my
 // database and middlware setups.
 
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
@@ -13,4 +13,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+export default connectDB;
