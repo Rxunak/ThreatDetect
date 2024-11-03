@@ -1,10 +1,17 @@
 import Analysis from "../models/textAnalysis.js";
 
+import { sendEmailAlert } from "../Email/EmailRoute.js";
+
 export const saveAnalysis = async (req, res) => {
   try {
     const { textAnalysed, analysis, getUserID } = req.body;
     const newAnalysis = new Analysis({ textAnalysed, analysis, getUserID });
     await newAnalysis.save();
+    await sendEmailAlert(
+      "bandodcarraunak@gmail.com",
+      "New Detection Alert",
+      `A new detection has been identified: ${textAnalysed} by user ${getUserID}`
+    );
     res.status(201).json({
       message: "Text analysis has been succesfully saved",
       newAnalysis,
