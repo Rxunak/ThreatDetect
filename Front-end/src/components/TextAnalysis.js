@@ -28,15 +28,55 @@ const TextAnalysis = () => {
     if (model && inputValue) {
       const predictions = await model.classify([inputValue]);
       setAnalysisResult(predictions);
-      console.log(predictions);
+      sendAnalysedData(inputValue, predictions);
     } else {
       console.log("Model is not loaded or input is empty!");
     }
   };
 
-  const filteredResults = analysisResult.filter(
-    (category) => category.results[0].match === true
-  );
+  const sendAnalysedData = async (userText, analysisResult) => {
+    const filteredResults = analysisResult
+      .filter((category) => category.results[0].match === true)
+      .map((category) => ({
+        label: category.label,
+        match: category.results[0].match,
+      }));
+
+    const getUser = localStorage.getItem("auth");
+    const getUserID = getUser ? JSON.parse(getUser) : null;
+
+    if (!getUserID || !getUserID.userId) {
+      console.log("User ID not found!");
+      return;
+    }
+
+    const backendData = {
+      getUserID: getUserID.userId,
+      textAnalysed: userText,
+      analysis: filteredResults,
+    };
+
+    console.log(backendData);
+
+    try {
+      const response = await fetch("http://localhost:5001/api/analysis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(backendData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send data");
+      }
+
+      const resData = await response.json();
+      console.log("Backend Response", resData);
+    } catch (error) {
+      console.log("Error while sending data to the backend", error);
+    }
+  };
 
   return (
     <div className="textmainCon">
@@ -45,9 +85,11 @@ const TextAnalysis = () => {
           <div>
             <h3>Detected Categories:</h3>
             <ul>
-              {filteredResults.map((category, index) => (
-                <li key={index}>{category.label}</li>
-              ))}
+              {analysisResult
+                .filter((category) => category.results[0].match === true)
+                .map((category, index) => (
+                  <li key={index}>{category.label}</li>
+                ))}
             </ul>
           </div>
         </div>
