@@ -124,8 +124,18 @@ const Camera = () => {
   };
 
   useEffect(() => {
+    const getUser = localStorage.getItem("auth");
+    const getUserID = getUser ? JSON.parse(getUser) : null;
+
+    if (!getUserID || !getUserID.userId) {
+      console.log("User ID not found!");
+      return;
+    }
+
+    console.log(getUserID);
     const sendDetectionData = async () => {
       const detectionData = {
+        getUserID: getUserID.userId,
         itemDetected: item,
         timestamp: new Date(),
       };

@@ -4,21 +4,33 @@ import MainPage from "./pages/MainPage";
 import LiveDetectionPage from "./pages/LiveDetectionPage";
 import LogPage from "./pages/LogPage";
 import TextualAnalysisPage from "./pages/TextualAnalysisPage";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import { div } from "@tensorflow/tfjs-core";
+import Login from "./components/Login";
+import Signup from "./components/SignUp";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <div>
       <Router>
         <Routes>
-          <Route index path="/" element={<MainPage />} />
-          <Route path="/live-detection" element={<LiveDetectionPage />} />
-          <Route path="/log-page" element={<LogPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+
+          <Route path="/" element={<ProtectedRoute element={<MainPage />} />} />
+          <Route
+            path="/live-detection"
+            element={<ProtectedRoute element={<LiveDetectionPage />} />}
+          />
           <Route
             path="/texttual-analysis-page"
-            element={<TextualAnalysisPage />}
+            element={<ProtectedRoute element={<TextualAnalysisPage />} />}
+          />
+          <Route
+            path="/log-page"
+            element={
+              <ProtectedRoute element={<LogPage />} requiredRole="admin" />
+            }
           />
         </Routes>
       </Router>

@@ -1,7 +1,15 @@
 import "../styles/Navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    console.log("Logout clicked");
+    localStorage.removeItem("auth");
+
+    navigate("/login");
+  };
   return (
     <div className="navbar">
       <span className="logo">THREAT DETECT</span>
@@ -23,6 +31,10 @@ const Navbar = () => {
       </div>
       <div className="contact">
         <li>Contact</li>
+      </div>
+
+      <div className="contact">
+        <button onClick={handleLogout}>Log out</button>
       </div>
     </div>
   );
