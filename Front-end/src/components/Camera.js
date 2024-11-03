@@ -3,11 +3,15 @@ import * as cocossd from "@tensorflow-models/coco-ssd";
 import "../styles/Camera.css";
 
 const Camera = () => {
+  //I am using videoRef to access the Video Element
   const videoRef = useRef(null);
+
   const canvasRef = useRef(null);
-  const [detectionMessage, setDetectionMessage] = useState("");
+  const [message, setMessage] = useState("");
   const [isDetecting, setIsDetecting] = useState(false);
-  const streamRef = useRef(null);
+  const [item, setItem] = useState("");
+  const [stream, setStream] = useState(null);
+  // const streamRef = useRef(null);
   const modelRef = useRef(null);
 
   const getCameraFeed = async () => {
@@ -22,31 +26,31 @@ const Camera = () => {
           canvasRef.current.height = videoRef.current.videoHeight;
         };
       }
-      streamRef.current = stream;
+      setStream(stream);
     } catch (error) {
-      console.error("Error accessing camera:", error);
+      console.error("Error while accessing camera feed:", error);
     }
   };
 
   const stopRecording = () => {
-    const stream = streamRef.current;
+    //const stream = streamRef.current;
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
     }
   };
 
-  const toggleDetection = async () => {
+  const handleDetection = async () => {
     if (isDetecting) {
       stopRecording();
       setIsDetecting(false);
     } else {
       await getCameraFeed();
-      attachVideoListener();
+      getVideoListener();
       setIsDetecting(true);
     }
   };
 
-  const attachVideoListener = () => {
+  const getVideoListener = () => {
     videoRef.current.addEventListener("loadeddata", () => {
       if (modelRef.current) {
         detectObjects(modelRef.current);
@@ -64,51 +68,55 @@ const Camera = () => {
     loadModelAndDetect();
   }, []);
 
-  // Function to detect objects continuously
   const detectObjects = async (model) => {
     if (videoRef.current && videoRef.current.readyState >= 2) {
-      const predictions = await model.detect(videoRef.current); // Detect objects in video
-      drawPredictions(predictions); // Draw predictions on canvas
+      const predictions = await model.detect(videoRef.current);
+      drawPredictions(predictions);
 
-      // Check for knife or weapon in the predictions and update the detection message
       const detected = predictions.some(
         (prediction) =>
-          prediction.class === "knife" || prediction.class === "weapon"
+          prediction.class === "bottle" || prediction.class === "person"
       );
 
-      // If a knife or weapon is detected, set the message
       if (detected) {
-        setDetectionMessage("Knife or Weapon Detected!");
+        const detectedObject = predictions.find(
+          (prediction) =>
+            prediction.class === "bottle" || prediction.class === "person"
+        ).class;
+        setMessage(
+          `${
+            detectedObject.charAt(0).toUpperCase() + detectedObject.slice(1)
+          } Detected!`
+        );
+        setItem(detectedObject);
       } else {
-        setDetectionMessage(""); // Clear message if no knife or weapon detected
+        setMessage("");
+        setItem("");
       }
-
-      requestAnimationFrame(() => detectObjects(model)); // Continue detection
+      requestAnimationFrame(() => detectObjects(model));
     }
   };
 
-  // Function to draw predictions on the canvas
+  // draw object bounding boxes
   const drawPredictions = (predictions) => {
-    const ctx = canvasRef.current.getContext("2d"); // Get canvas context
-    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height); // Clear previous drawings
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-    // Draw each prediction
     predictions.forEach((prediction) => {
       ctx.beginPath();
       ctx.rect(
-        prediction.bbox[0], // x-coordinate
-        prediction.bbox[1], // y-coordinate
-        prediction.bbox[2], // width
-        prediction.bbox[3] // height
+        prediction.bbox[0],
+        prediction.bbox[1],
+        prediction.bbox[2],
+        prediction.bbox[3]
       );
       ctx.lineWidth = 2;
-      ctx.strokeStyle = "red"; // Rectangle border color
-      ctx.fillStyle = "red"; // Text color
+      ctx.strokeStyle = "red";
+      ctx.fillStyle = "red";
       ctx.stroke();
 
-      // Draw label text
       ctx.fillText(
-        `${prediction.class} (${Math.round(prediction.score * 100)}%)`, // Text label
+        `${prediction.class} (${Math.round(prediction.score * 100)}%)`,
         prediction.bbox[0],
         prediction.bbox[1] > 10 ? prediction.bbox[1] - 5 : 10
       );
@@ -118,7 +126,7 @@ const Camera = () => {
   useEffect(() => {
     const sendDetectionData = async () => {
       const detectionData = {
-        itemDetected: "knife", // Example of the detected item
+        itemDetected: item,
         timestamp: new Date(),
       };
 
@@ -142,8 +150,8 @@ const Camera = () => {
       }
     };
 
-    sendDetectionData(); // Call the function to send the data
-  }, []);
+    sendDetectionData();
+  }, [item]);
 
   return (
     <div className="cameraMainContainer">
@@ -155,7 +163,7 @@ const Camera = () => {
             <canvas ref={canvasRef} className="canRef" />
           </div>
           <div>
-            {detectionMessage && (
+            {message && (
               <div
                 style={{
                   top: 0,
@@ -164,12 +172,12 @@ const Camera = () => {
                   fontSize: "20px",
                 }}
               >
-                {detectionMessage}
+                {message}
               </div>
             )}
           </div>
           <div>
-            <button onClick={toggleDetection}>
+            <button onClick={handleDetection}>
               {isDetecting ? "Stop " : "Start"}
             </button>
           </div>
