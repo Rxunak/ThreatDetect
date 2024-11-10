@@ -3,16 +3,24 @@ import * as cocossd from "@tensorflow-models/coco-ssd";
 import "../styles/Camera.css";
 
 const Camera = () => {
-  //I am using videoRef to access the Video Element
   const videoRef = useRef(null);
-
+  const modelRef = useRef(null);
   const canvasRef = useRef(null);
+
   const [message, setMessage] = useState("");
   const [isDetecting, setIsDetecting] = useState(false);
   const [item, setItem] = useState("");
   const [stream, setStream] = useState(null);
-  // const streamRef = useRef(null);
-  const modelRef = useRef(null);
+
+  useEffect(() => {
+    const loadModelAndDetect = async () => {
+      const model = await cocossd.load();
+      console.log("Model loaded");
+      modelRef.current = model;
+    };
+
+    loadModelAndDetect();
+  }, []);
 
   const getCameraFeed = async () => {
     try {
@@ -32,8 +40,15 @@ const Camera = () => {
     }
   };
 
+  const getVideoListener = () => {
+    videoRef.current.addEventListener("loadeddata", () => {
+      if (modelRef.current) {
+        detectObjects(modelRef.current);
+      }
+    });
+  };
+
   const stopRecording = () => {
-    //const stream = streamRef.current;
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
     }
@@ -49,24 +64,6 @@ const Camera = () => {
       setIsDetecting(true);
     }
   };
-
-  const getVideoListener = () => {
-    videoRef.current.addEventListener("loadeddata", () => {
-      if (modelRef.current) {
-        detectObjects(modelRef.current);
-      }
-    });
-  };
-
-  useEffect(() => {
-    const loadModelAndDetect = async () => {
-      const model = await cocossd.load();
-      console.log("Model loaded");
-      modelRef.current = model;
-    };
-
-    loadModelAndDetect();
-  }, []);
 
   const detectObjects = async (model) => {
     if (videoRef.current && videoRef.current.readyState >= 2) {
@@ -93,6 +90,7 @@ const Camera = () => {
         setMessage("");
         setItem("");
       }
+      //This is where it is running it continiously
       requestAnimationFrame(() => detectObjects(model));
     }
   };
@@ -100,8 +98,10 @@ const Camera = () => {
   // draw object bounding boxes
   const drawPredictions = (predictions) => {
     const ctx = canvasRef.current.getContext("2d");
+    //clears any previous drawings
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
+    //Drawing Rectengales now
     predictions.forEach((prediction) => {
       ctx.beginPath();
       ctx.rect(
@@ -110,9 +110,10 @@ const Camera = () => {
         prediction.bbox[2],
         prediction.bbox[3]
       );
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "red";
-      ctx.fillStyle = "red";
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = "green";
+      ctx.fillStyle = "green";
+      //Darws the Rectangle
       ctx.stroke();
 
       ctx.fillText(
@@ -124,43 +125,53 @@ const Camera = () => {
   };
 
   useEffect(() => {
-    const getUser = localStorage.getItem("auth");
-    const getUserID = getUser ? JSON.parse(getUser) : null;
+    let intervalId;
 
-    if (!getUserID || !getUserID.userId) {
-      console.log("User ID not found!");
-      return;
-    }
+    if (isDetecting) {
+      intervalId = setInterval(() => {
+        const getUser = localStorage.getItem("auth");
+        const getUserID = getUser ? JSON.parse(getUser) : null;
 
-    console.log(getUserID);
-    const sendDetectionData = async () => {
-      const detectionData = {
-        getUserID: getUserID.userId,
-        itemDetected: item,
-        timestamp: new Date(),
-      };
-
-      try {
-        const response = await fetch("http://localhost:5001/api/detections", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(detectionData),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to send data");
+        if (!getUserID || !getUserID.userId) {
+          console.log("User ID not found!");
+          return;
         }
 
-        const result = await response.json();
-        console.log("Detection sent:", result);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+        const sendDetectionData = async () => {
+          const detectionData = {
+            getUserID: getUserID.userId,
+            itemDetected: item,
+            timestamp: new Date(),
+          };
 
-    sendDetectionData();
+          try {
+            const response = await fetch(
+              "http://localhost:5001/api/detections",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(detectionData),
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("Failed to send data");
+            }
+
+            const result = await response.json();
+            console.log("Detection sent:", result);
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        };
+
+        sendDetectionData();
+      }, 30000);
+    }
+
+    return () => clearInterval(intervalId);
   }, [item]);
 
   return (
