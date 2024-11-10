@@ -1,9 +1,8 @@
-import { data } from "@tensorflow/tfjs";
+import { data, div } from "@tensorflow/tfjs";
 import "../styles/Login.css";
-
 import React, { useState, useEffect } from "react";
-
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [inputFields, setInputFields] = useState({
@@ -12,8 +11,8 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
-
   const [submitting, setSubmitting] = useState(false);
+  const [loginError, setLoginError] = useState([]);
 
   const navigate = useNavigate();
 
@@ -42,6 +41,7 @@ const Login = () => {
     event.preventDefault();
     const validationErrors = validationValues(inputFields);
     setErrors(validationErrors);
+
     if (Object.keys(validationErrors).length === 0) {
       setSubmitting(true);
     } else {
@@ -75,10 +75,13 @@ const Login = () => {
       setSubmitting(false);
       navigate("/");
     } else {
-      console.log("login failed:", data);
+      console.log("Login has beenss failed:", data);
       setSubmitting(false);
+      setLoginError(data.message);
 
-      navigate("/signup");
+      console.log(loginError);
+
+      // navigate("/signup");
     }
   };
 
@@ -117,8 +120,14 @@ const Login = () => {
           {submitting ? "Submitting.." : "Submit"}
         </button>
       </form>
-      {Object.keys(errors).length === 0 && submitting ? (
-        <span className="success">Login Succesful</span>
+      {loginError && <p>{loginError}</p>}
+      {loginError && loginError.length >= 1 ? (
+        <div>
+          <p>Have't registered yet please click the button below!!</p>
+          <button>
+            <Link to="/signup">Sign Up</Link>
+          </button>
+        </div>
       ) : null}
     </div>
   );
