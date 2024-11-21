@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import * as toxicity from "@tensorflow-models/toxicity";
 import * as tf from "@tensorflow/tfjs";
 import "../styles/TextAnalysis.css";
+import Camera from "../components/Camera";
 
 const TextAnalysis = () => {
   const [inputValue, setInputValue] = useState("");
@@ -9,6 +10,8 @@ const TextAnalysis = () => {
   const [model, setModel] = useState(null);
 
   const [analysisResult, setAnalysisResult] = useState([]);
+
+  const [turnCameraOn, setTurnCameraOn] = useState(false);
 
   const onChange = (e) => {
     setInputValue(e.target.value);
@@ -78,6 +81,14 @@ const TextAnalysis = () => {
     }
   };
 
+  const OpenCamera = () => {
+    setTurnCameraOn(true);
+  };
+
+  const CloseCamera = () => {
+    setTurnCameraOn(false);
+  };
+
   return (
     <div className="textmainCon">
       <div className="textSeconCon">
@@ -107,9 +118,22 @@ const TextAnalysis = () => {
 
           <div>
             <button onClick={textAnalyse}>Analyze</button>
+            <button onClick={OpenCamera} style={{ marginLeft: "10px" }}>
+              Open Camera
+            </button>
           </div>
         </div>
       </div>
+      {turnCameraOn && (
+        <div className="modalOverlay">
+          <div className="modalContent">
+            <button className="closeButton" onClick={CloseCamera}>
+              Close
+            </button>
+            <Camera />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
