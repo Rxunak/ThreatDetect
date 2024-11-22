@@ -92,6 +92,7 @@ const TextAnalysis = () => {
   return (
     <div className="textmainCon">
       <div className="textSeconCon">
+        <div className="textFirstContainer">Hello</div>
         <div className="resultDiv">
           <div>
             <h3>Detected Categories:</h3>

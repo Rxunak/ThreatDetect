@@ -18,12 +18,12 @@ const Navbar = () => {
           {" "}
           <Link to="/">Home</Link>
         </li>
-        <li>
+        {/* <li>
           {" "}
           <Link to="/live-detection">Live Detection</Link>
-        </li>
+        </li> */}
         <li>
-          <Link to="/texttual-analysis-page">Text Analysis</Link>
+          <Link to="/texttual-analysis-page">Let's Chat</Link>
         </li>
         <li>
           <Link to="/log-page">Log Detection</Link>
