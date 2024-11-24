@@ -1,7 +1,117 @@
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+.loginMain {
+  height: 100vh;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+}
+
+.firstDiv {
+  height: 100vh;
+  width: 40%;
+  background-color: #5dade2;
+}
+
+.secondDiv {
+  height: 100vh;
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.secondDivForm {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: auto;
+  width: 500px;
+}
+
+.formHeading {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.formH1 {
+  margin-bottom: 0px;
+  font-family: "Roboto", sans-serif;
+  color: #5dade2;
+}
+
+.formP {
+  font-family: "Roboto", sans-serif;
+  font-weight: bolder;
+}
+
+.formDiv {
+  height: auto;
+  width: 500px;
+}
+
+.form {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  width: auto;
+  height: 460px;
+}
+
+.fieldName {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 460px;
+}
+
+.input {
+  font-weight: bolder;
+}
+
+.label {
+  height: 100px;
+}
+
+.emailDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 450px;
+  height: 70px;
+}
+
+.passwordDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 450px;
+  height: 70px;
+}
+
+.buttonForm {
+  width: 450px;
+  height: 50px;
+  border-radius: 5px;
+  background-color: #5dade2;
+  border: none;
+}
+
+/* .redirectSignup {
+  border: 2px solid black;
+  width: 500px;
+  height: 200px;
+} */
+
 .loginSecond {
   display: flex;
   flex-direction: column;
-  border: 2px solid black;
   padding: 10px;
   height: 200px;
   justify-content: center;

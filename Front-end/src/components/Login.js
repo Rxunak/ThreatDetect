@@ -93,42 +93,76 @@ const Login = () => {
 
   return (
     <div className="loginMain">
-      <form onSubmit={handleSubmit}>
-        <div>
-          <div>
-            <label htmlFor="">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={inputFields.email}
-              onChange={handleChange}
-            />
-            {errors.email && <p className="error">{errors.email}</p>}
+      <div className="firstDiv">
+        <div className="firstDivSide"></div>
+      </div>
+      <div className="secondDiv">
+        <div className="secondDivForm">
+          <div className="formDiv">
+            <form onSubmit={handleSubmit} className="form">
+              <div className="fieldName">
+                <div className="formHeading">
+                  <h1 className="formH1">ThreatDetect</h1>
+                  <p className="formP">Enter your login credentials</p>
+                </div>
+                <div className="emailDiv">
+                  <label htmlFor="" className="input">
+                    Email:
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={inputFields.email}
+                    onChange={handleChange}
+                    placeholder="Enter your Email:"
+                    className="label"
+                  />
+                  {errors.email && <p className="error">{errors.email}</p>}
+                </div>
+                <div className="passwordDiv">
+                  <label htmlFor="" className="input">
+                    Password:
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={inputFields.password}
+                    onChange={handleChange}
+                    placeholder="Enter your Password:"
+                    className="label"
+                  />
+                  {errors.password && (
+                    <p className="error">{errors.password}</p>
+                  )}
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="buttonForm"
+                  >
+                    {submitting ? "Submitting.." : "Submit"}
+                  </button>
+                </div>
+
+                <div>
+                  <p>
+                    Not registered? <a href="/signup">Create an account</a>
+                  </p>
+                </div>
+              </div>
+            </form>
           </div>
-          <div>
-            <label htmlFor="">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={inputFields.password}
-              onChange={handleChange}
-            />
-            {errors.password && <p className="error">{errors.password}</p>}
-          </div>
+          {/* <div className="redirectSignup">
+            {loginError && <p>{loginError}</p>}
+            {loginError && loginError.length >= 1 ? (
+              <div>
+                <p>Have't registered yet please click the link above!!</p>
+              </div>
+            ) : null}
+          </div> */}
         </div>
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Submitting.." : "Submit"}
-        </button>
-      </form>
-      {loginError && <p>{loginError}</p>}
-      {loginError && loginError.length >= 1 ? (
-        <div>
-          <p>Have't registered yet please click the button below!!</p>
-          <button>
-            <Link to="/signup">Sign Up</Link>
-          </button>
-        </div>
-      ) : null}
+      </div>
     </div>
   );
 };
