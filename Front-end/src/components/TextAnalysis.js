@@ -4,18 +4,16 @@ import * as tf from "@tensorflow/tfjs";
 import "../styles/TextAnalysis.css";
 import Camera from "../components/Camera";
 
-const TextAnalysis = () => {
+const TextAnalysis = ({ socket, username, room }) => {
   const [inputValue, setInputValue] = useState("");
+
+  const [chatHistory, setChatHistory] = useState([]);
 
   const [model, setModel] = useState(null);
 
   const [analysisResult, setAnalysisResult] = useState([]);
 
   const [turnCameraOn, setTurnCameraOn] = useState(false);
-
-  const onChange = (e) => {
-    setInputValue(e.target.value);
-  };
 
   useEffect(() => {
     const loadModel = async () => {
@@ -27,15 +25,32 @@ const TextAnalysis = () => {
     loadModel();
   }, []);
 
+  const onChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
   const textAnalyse = async () => {
     if (model && inputValue) {
       const predictions = await model.classify([inputValue]);
+      //saving the predictions
       setAnalysisResult(predictions);
+      //sennding the parameters for backend
       sendAnalysedData(inputValue, predictions);
+      //saving the inputvalue into chatArray state
+      setChatHistory([
+        ...chatHistory,
+        { messageInput: inputValue, analysis: predictions },
+      ]);
+      //setting input value state to empty
+      setInputValue("");
     } else {
       console.log("Model is not loaded or input is empty!");
     }
   };
+
+  console.log(analysisResult);
+
+  //BACKEND SECTION
 
   const sendAnalysedData = async (userText, analysisResult) => {
     const filteredResults = analysisResult
@@ -43,6 +58,7 @@ const TextAnalysis = () => {
       .map((category) => ({
         label: category.label,
         match: category.results[0].match,
+        probabilities: category.results[0].probabilities,
       }));
 
     const getUser = localStorage.getItem("auth");
@@ -90,46 +106,54 @@ const TextAnalysis = () => {
   };
 
   return (
-    <div className="textmainCon">
-      <div className="textSeconCon">
-        <div className="textFirstContainer">Hello</div>
-        <div className="resultDiv">
-          <div>
-            <h3>Detected Categories:</h3>
-            <ul>
-              {analysisResult
-                .filter((category) => category.results[0].match === true)
-                .map((category, index) => (
-                  <li key={index}>{category.label}</li>
-                ))}
-            </ul>
-          </div>
+    <div className="textMainContainer">
+      <div className="detectionContainer">
+        <div className="chatHead">
+          <p>Let's Chat with Text Analysis</p>
         </div>
 
-        <div className="secondDivtext">
-          <div className="inputDiv">
+        <div className="chatBody">
+          <ul>
+            {chatHistory &&
+              chatHistory.map((chat, index) => (
+                <li key={index}>
+                  <p>{chat.messageInput}</p>
+                  <ul>
+                    {chat.analysis
+                      .filter((category) => category.results[0].match === true)
+                      .map((category) => `- Violets: ${category.label}`)
+                      .join(", ")}
+                  </ul>
+                </li>
+              ))}
+          </ul>
+        </div>
+
+        <div className="chatFootter">
+          <div>
             <input
               type="text"
               value={inputValue}
               onChange={onChange}
-              placeholder="Text to Analyse"
-              className="test"
+              placeholder="Type...."
+              className="text"
             />
           </div>
 
           <div>
-            <button onClick={textAnalyse}>Analyze</button>
+            <button onClick={textAnalyse}>Send</button>
             <button onClick={OpenCamera} style={{ marginLeft: "10px" }}>
               Open Camera
             </button>
           </div>
         </div>
       </div>
+
       {turnCameraOn && (
         <div className="modalOverlay">
           <div className="modalContent">
             <button className="closeButton" onClick={CloseCamera}>
-              Close
+              Close Camera
             </button>
             <Camera />
           </div>

@@ -125,3 +125,9 @@ body {
 .loginSecond > button {
   width: 200px;
 }
+
+.error {
+  color: #5dade2;
+  margin: 0px;
+  font-size: 14px;
+}

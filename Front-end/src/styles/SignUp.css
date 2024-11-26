@@ -1,0 +1,62 @@
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+.signupMain {
+  height: 100vh;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+}
+
+.signupFirst {
+  height: 100vh;
+  width: 40%;
+  background-color: #5dade2;
+}
+
+.signupSecond {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signupForm {
+  width: 500px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signupField {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputFieldsSign {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 450px;
+  height: 70px;
+}
+
+.signInput {
+  height: 40px;
+}
+
+.errors {
+  color: #5dade2;
+  margin: 0px;
+  font-size: 14px;
+}
+
+.signupRedirect {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}

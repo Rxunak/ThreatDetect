@@ -1,4 +1,4 @@
-import "../styles/Login.css";
+import "../styles/SignUp.css";
 
 import React, { useState, useEffect } from "react";
 
@@ -14,6 +14,8 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
 
   const [submitting, setSubmitting] = useState(false);
+
+  const [signUpError, setSignUpError] = useState([]);
 
   const navigate = useNavigate();
 
@@ -73,6 +75,7 @@ const Signup = () => {
     } else {
       console.log("Signup failed:", data);
       setSubmitting(false);
+      setSignUpError(data.message);
     }
   };
 
@@ -83,47 +86,90 @@ const Signup = () => {
   }, [errors, submitting]);
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <div>
-            <label htmlFor="">Username</label>
-            <input
-              type="text"
-              name="username"
-              value={inputFields.username}
-              onChange={handleChange}
-            />
-            {errors.username && <p className="errors">{errors.username}</p>}
+    <div className="signupMain">
+      <div className="signupFirst"></div>
+      <div className="signupSecond">
+        <form onSubmit={handleSubmit} className="signupForm">
+          <div className="signupField">
+            <div className="formHeading">
+              <h1 className="formH1">ThreatDetect</h1>
+              <p className="formP">Enter your login credentials</p>
+            </div>
+            <div className="inputFieldsSign">
+              <label htmlFor="" className="input">
+                Username:
+              </label>
+              <input
+                type="text"
+                name="username"
+                value={inputFields.username}
+                onChange={handleChange}
+                placeholder="Please enter Username:"
+                className="signInput"
+              />
+              {errors.username && <p className="errors">*{errors.username}*</p>}
+            </div>
+            <div className="inputFieldsSign">
+              <label htmlFor="" className="input">
+                Email:
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={inputFields.email}
+                onChange={handleChange}
+                placeholder="Please enter Email:"
+                className="signInput"
+              />
+              {errors.email && <p className="errors">*{errors.email}*</p>}
+            </div>
+            <div className="inputFieldsSign">
+              <label htmlFor="" className="input">
+                Password:
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={inputFields.password}
+                onChange={handleChange}
+                placeholder="Please enter Password:"
+                className="signInput"
+              />
+              {errors.password && <p className="errors">*{errors.password}</p>}
+            </div>
+            <div>
+              {" "}
+              <button
+                type="submit"
+                disabled={submitting}
+                className="buttonForm"
+              >
+                {submitting ? "Submitting.." : "Submit"}
+              </button>
+            </div>
+            <div className="signupRedirect">
+              <div>
+                {signUpError && signUpError.length >= 1 ? (
+                  <div>
+                    {signUpError && <p>{signUpError}</p>}
+                    <p>Please Login Below !!</p>
+                  </div>
+                ) : null}
+              </div>
+              <div>
+                {" "}
+                <p>
+                  Already registered? <a href="/login">Login In</a>
+                </p>
+              </div>
+            </div>
           </div>
-          <div>
-            <label htmlFor="">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={inputFields.email}
-              onChange={handleChange}
-            />
-            {errors.email && <p className="errors">{errors.email}</p>}
-          </div>
-          <div>
-            <label htmlFor="">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={inputFields.password}
-              onChange={handleChange}
-            />
-            {errors.password && <p className="errors">{errors.password}</p>}
-          </div>
-        </div>
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Submitting.." : "Submit"}
-        </button>
-      </form>
-      {Object.keys(errors).length === 0 && submitting ? (
-        <span className="success">Login Succesful</span>
-      ) : null}
+        </form>
+
+        {Object.keys(errors).length === 0 && submitting ? (
+          <span className="success">Login Succesful</span>
+        ) : null}
+      </div>
     </div>
   );
 };

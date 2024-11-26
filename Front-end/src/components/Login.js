@@ -117,7 +117,7 @@ const Login = () => {
                     placeholder="Enter your Email:"
                     className="label"
                   />
-                  {errors.email && <p className="error">{errors.email}</p>}
+                  {errors.email && <p className="error">*{errors.email}*</p>}
                 </div>
                 <div className="passwordDiv">
                   <label htmlFor="" className="input">
@@ -132,7 +132,7 @@ const Login = () => {
                     className="label"
                   />
                   {errors.password && (
-                    <p className="error">{errors.password}</p>
+                    <p className="error">*{errors.password}*</p>
                   )}
                 </div>
                 <div>
@@ -146,21 +146,24 @@ const Login = () => {
                 </div>
 
                 <div>
-                  <p>
-                    Not registered? <a href="/signup">Create an account</a>
-                  </p>
+                  <div>
+                    {loginError && loginError.length >= 1 ? (
+                      <div>
+                        <p>
+                          Have't registered yet please click the link below!!
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                  <div>
+                    <p>
+                      Not registered? <a href="/signup">Create an account</a>
+                    </p>
+                  </div>
                 </div>
               </div>
             </form>
           </div>
-          {/* <div className="redirectSignup">
-            {loginError && <p>{loginError}</p>}
-            {loginError && loginError.length >= 1 ? (
-              <div>
-                <p>Have't registered yet please click the link above!!</p>
-              </div>
-            ) : null}
-          </div> */}
         </div>
       </div>
     </div>
