@@ -13,6 +13,11 @@ const detectionSchema = new mongoose.Schema({
     required: true,
   },
 
+  confidenceScore: {
+    type: String,
+    required: true,
+  },
+
   timestamp: {
     type: Date,
     default: Date.now(),

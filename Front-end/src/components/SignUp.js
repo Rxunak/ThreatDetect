@@ -93,7 +93,7 @@ const Signup = () => {
           <div className="signupField">
             <div className="formHeading">
               <h1 className="formH1">ThreatDetect</h1>
-              <p className="formP">Enter your login credentials</p>
+              <p className="formP">Enter your details below to register</p>
             </div>
             <div className="inputFieldsSign">
               <label htmlFor="" className="input">

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as cocossd from "@tensorflow-models/coco-ssd";
 import "../styles/Camera.css";
+import * as tf from "@tensorflow/tfjs";
 
 const Camera = () => {
   const videoRef = useRef(null);
@@ -11,6 +12,7 @@ const Camera = () => {
   const [isDetecting, setIsDetecting] = useState(false);
   const [item, setItem] = useState("");
   const [stream, setStream] = useState(null);
+  const [conScore, setConScore] = useState([])
 
   useEffect(() => {
     const loadModelAndDetect = async () => {
@@ -29,7 +31,9 @@ const Camera = () => {
       });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        //Once the metaData is loaded
         videoRef.current.onloadedmetadata = () => {
+          //We are setting up the canvasRef to the Video Ref dimentions
           canvasRef.current.width = videoRef.current.videoWidth;
           canvasRef.current.height = videoRef.current.videoHeight;
         };
@@ -40,6 +44,7 @@ const Camera = () => {
     }
   };
 
+  //Get enough data to run the model such like dimentions and load the model
   const getVideoListener = () => {
     videoRef.current.addEventListener("loadeddata", () => {
       if (modelRef.current) {
@@ -67,9 +72,14 @@ const Camera = () => {
 
   const detectObjects = async (model) => {
     if (videoRef.current && videoRef.current.readyState >= 2) {
+      //Detecting live feed using the model
       const predictions = await model.detect(videoRef.current);
+      //calling drawPredictions and passing in predictions
       drawPredictions(predictions);
 
+      confidenceScore(predictions)
+      
+      //Finding Specific detections
       const detected = predictions.some(
         (prediction) =>
           prediction.class === "bottle" || prediction.class === "person"
@@ -97,32 +107,96 @@ const Camera = () => {
 
   // draw object bounding boxes
   const drawPredictions = (predictions) => {
-    const ctx = canvasRef.current.getContext("2d");
-    //clears any previous drawings
-    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-    //Drawing Rectengales now
+    //Setting up drawing Req
     predictions.forEach((prediction) => {
-      ctx.beginPath();
-      ctx.rect(
+      context.beginPath();
+      context.rect(
         prediction.bbox[0],
         prediction.bbox[1],
         prediction.bbox[2],
         prediction.bbox[3]
       );
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = "green";
-      ctx.fillStyle = "green";
-      //Darws the Rectangle
-      ctx.stroke();
+      context.lineWidth = 5;
+      context.strokeStyle = "red";
+      context.fillRect = "yellow";
+      context.stroke();
 
-      ctx.fillText(
-        `${prediction.class} (${Math.round(prediction.score * 100)}%)`,
-        prediction.bbox[0],
-        prediction.bbox[1] > 10 ? prediction.bbox[1] - 5 : 10
-      );
+      const font = (context.font = prediction.class);
+      
+      context.fillText(font, prediction.bbox[0], prediction.bbox[1]);
+      
+
     });
   };
+
+  const confidenceScore = (predictions) => {
+    const getConf = predictions.find((confidence) => confidence.class === "person");
+    let finalconfidence = null;
+    if(getConf){
+      finalconfidence = `${parseFloat(getConf.score * 100).toFixed(2)}%`;
+    }
+    setConScore(finalconfidence)
+  }
+
+ 
+  
+
+  // let lastSavedTime = 0;
+  // const saveImage = (predictions) => {
+  //   let currentTime = Date.now();
+
+  //   if (currentTime - lastSavedTime > 50000) {
+  //     lastSavedTime = currentTime;
+
+  //     predictions.forEach((predicts) => {
+  //       if (predicts.class === "person") {
+  //         console.log(`${predicts.class} detected`);
+
+  //         const canvas = canvasRef.current;
+  //         const context = canvas.getContext("2d");
+  //         const video = videoRef.current;
+
+  //         context.clearRect(
+  //           0,
+  //           0,
+  //           canvasRef.current.width,
+  //           canvasRef.current.height
+  //         );
+
+  //         context.drawImage(
+  //           video,
+  //           predicts.bbox[0],
+  //           predicts.bbox[1],
+  //           predicts.bbox[2],
+  //           predicts.bbox[3],
+  //           0,
+  //           0,
+  //           canvas.width,
+  //           canvas.height
+  //         );
+
+  //         // canvas.toBlob((blob) => {
+  //         //   const formData = new FormData();
+  //         //   //Name, valye, filename
+  //         //   formData.append("image", blob, "image.png");
+
+  //         //   fetch("http://localhost:5001/upload", {
+  //         //     method: "POST",
+  //         //     body: formData,
+  //         //   })
+  //         //     .then((response) => response.json())
+  //         //     .then((data) => console.log(data))
+  //         //     .catch((error) => console.log("Unable to send image", error));
+  //         // }, "image/png");
+  //       }
+  //     });
+  //   }
+  // };
+  //BACKEND PART
 
   useEffect(() => {
     let intervalId;
@@ -141,6 +215,7 @@ const Camera = () => {
           const detectionData = {
             getUserID: getUserID.userId,
             itemDetected: item,
+            confidenceScore: conScore,
             timestamp: new Date(),
           };
 

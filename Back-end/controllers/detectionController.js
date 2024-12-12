@@ -5,10 +5,8 @@ import { sendEmailAlert } from "../Email/EmailRoute.js";
 
 export const saveDetection = async (req, res) => {
   try {
-    const { itemDetected, getUserID } = req.body;
-    console.log(itemDetected);
-    const newDetection = new Detection({ itemDetected, getUserID });
-    console.log(newDetection);
+    const { itemDetected, getUserID, confidenceScore } = req.body;
+    const newDetection = new Detection({ itemDetected, getUserID, confidenceScore});
     await newDetection.save();
 
     await sendEmailAlert(
@@ -63,13 +61,14 @@ export const updateDetections = async (req, res) => {
 export const deleteDetections = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log("Received", id)
     const detections = await Detection.findByIdAndDelete(id);
+
     if (!detections) {
       return res.status(404).json({ message: "Detection not found" });
     }
-    const deletedDetection = await Detection.findById(id);
-    res.status(200).json(deletedDetection);
   } catch (error) {
+    console.error("Error in deleteDetections:", error);
     res.status(500).json({ message: error.message });
   }
 };

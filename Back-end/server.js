@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-dotenv.config();
 import express from "express";
 import connectDB from "./config/db.js";
 import detectionRoutes from "./routes/detectionRoutes.js";
@@ -7,8 +6,12 @@ import userRoutes from "./routes/userRoutes.js";
 import textAnalysisRoutes from "./routes/textAnalysisRoutes.js";
 import cors from "cors";
 
+
+//Initialised the Express App
 const app = express();
 const PORT = process.env.PORT || 5001;
+
+dotenv.config();
 
 connectDB();
 
@@ -20,6 +23,8 @@ app.use("/api/detections", detectionRoutes);
 app.use("/api/users", userRoutes);
 
 app.use("/api/analysis", textAnalysisRoutes);
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
