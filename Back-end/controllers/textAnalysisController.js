@@ -30,3 +30,33 @@ export const getAnalysis = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getAnalysisById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const analysis = await Analysis.findById(id);
+    if (!analysis) {
+      return res.status(404).json({ message: "Analysis not found" });
+    }
+    
+    res.status(200).json(analysis);
+  } catch (error) {
+    console.log("Here not working")
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateAnalysis = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const analysis = await Analysis.findByIdAndUpdate(id, req.body);
+    if (!analysis) {
+      return res.status(404).json({ message: "Analysis not found" });
+    }
+    const updatedAnalysis = await Analysis.findById(id);
+    res.status(200).json(updatedAnalysis);
+  } catch (error) {
+    console.log("Here not working")
+    res.status(500).json({ message: error.message });
+  }
+};
