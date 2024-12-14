@@ -6,66 +6,46 @@ import "../styles/LogDetection.css";
 const LogPage = () => {
   const [detectionData, setDetectionData] = useState([]);
   const [textAnalysis, setTextAnalysis] = useState([]);
- 
- 
-
-  //state to turn on the edit mode
   const [editMode, setEditMode] = useState(false);
-
-  //state to store the detection being edited
   const [editing, setEditing] = useState(null);
-
- 
+  const [textAnalysisEdit, setTextAnalysisEdit] = useState(false);
+  const [textAnalysisEditing, setTextAnalysisEditing] =useState(null)
 
   useEffect(() => {
     const fetchDetection = async () => {
       try {
         const response = await fetch("http://localhost:5001/api/detections");
         const data = await response.json();
-
         setDetectionData(data);
-
-        
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
     };
-
     fetchDetection();
   }, [detectionData]);
-
-  
 
   useEffect(() => {
     const fetchTextAnalysis = async () => {
       try {
         const response = await fetch("http://localhost:5001/api/analysis");
         const data = await response.json();
-
         setTextAnalysis(data);
-
-        console.log(textAnalysis);
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
     };
-
     fetchTextAnalysis();
   }, []);
 
-
   const handleDelete = async (id) => {
-      
       try {
         const response = await fetch(`http://localhost:5001/api/detections/${id}`, {
           method: "DELETE",
         });
-  
         if (response.ok) {
           setDetectionData((prevDetections) =>
             prevDetections.filter((detection) => detection.id !== id)
           );
-      
         } else {
           const data = await response.json();
           alert(data.message || "Failed to delete the detection");
@@ -73,19 +53,25 @@ const LogPage = () => {
       } catch (error) {
         alert("An error occurred: " + error.message);
       }
-    
   };
 
   const handleEdit = (detection) => {
-    console.log(detection)
     setEditMode(true);
     setEditing(detection);
-    
-   
   }
 
+  const handleTextEdit = (text) => {
+    setTextAnalysisEdit(true);
+    setTextAnalysisEditing(text);
+  }
+
+  // useEffect(() => {
+  //   console.log(textAnalysisEditing)
+  // }, [textAnalysisEditing])
+
+
+
   const handleSubmit = async (event) => {
-    console.log("This is the first Data",editing)
     event.preventDefault();
     try{
       const response = await fetch(`http://localhost:5001/api/detections/${editing._id}`, {
@@ -94,9 +80,8 @@ const LogPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(editing )
-
-        
       })
+
     if(response.ok){
         const updatedDetection = await response.json();
         console.log("This is the new detection",updatedDetection)
@@ -105,21 +90,45 @@ const LogPage = () => {
             detection._id === updatedDetection._id ? updatedDetection : detection
           )
         );
-
         setEditing(false);
-        
-
       }else{
         alert("not working")
       }
     }catch(error){
       console.log(error)
     }
-
   }
 
+  const handleSubmitText = async (event) => {
+    event.preventDefault();
+    try{
+      const response = await fetch(`http://localhost:5001/api/analysis/${textAnalysisEditing._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(textAnalysisEditing)
+      })
 
-   
+      
+
+    if(response.ok){
+        const updatedAnalysis = await response.json();
+        console.log("This is the new detection",updatedAnalysis)
+        setTextAnalysis((prevAnalysis) =>
+          prevAnalysis.map((textAnalyse) =>
+            textAnalyse._id === updatedAnalysis._id ? updatedAnalysis : textAnalyse
+          )
+        );
+
+        setTextAnalysisEdit(false)
+      }else{
+        alert("not working")
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   return (
     <div>
@@ -165,14 +174,25 @@ const LogPage = () => {
             >
               {textAnalysis.map((text, index) => (
                 <ol key={text._id || index}>
-                  <li>{"Detected Item: " + text.textAnalysed}</li>
                   <li>{"Detected User: " + text.getUserID}</li>
+                  <li>{"Detected Item: " + text.textAnalysed}</li>
+                  <button onClick={() => {handleTextEdit(text)}}>Edit</button>
                 </ol>
               ))}
+
+              {textAnalysisEdit && textAnalysisEditing ? (
+                <form onSubmit={handleSubmitText}>
+                <label htmlFor="">Edit Detected User</label>
+                <input type="text" value={textAnalysisEditing.textAnalysed} onChange={(e) => setTextAnalysisEditing({ ...textAnalysisEditing, textAnalysed: e.target.value })} />
+                <input type="submit" />
+                <button onClick={() => {setTextAnalysisEdit(false)}}>Close</button>
+                </form>
+
+                ): null}
+
+              
             </div>
-            <div>
-              <button>Clear</button>
-            </div>
+            
           </div>
         </div>
       </div>
