@@ -15,7 +15,7 @@ const LogPage = () => {
   //state to store the detection being edited
   const [editing, setEditing] = useState(null);
 
-  const [preFills, setPreFills] = useState("jhjh")
+ 
 
   useEffect(() => {
     const fetchDetection = async () => {
@@ -81,7 +81,7 @@ const LogPage = () => {
     setEditMode(true);
     setEditing(detection);
     
-    setPreFills(detection.itemDetected);
+   
   }
 
   const handleSubmit = async (event) => {
@@ -107,7 +107,7 @@ const LogPage = () => {
         );
 
         setEditing(false);
-        setPreFills("");
+        
 
       }else{
         alert("not working")
@@ -131,8 +131,8 @@ const LogPage = () => {
             <div style={{ height: "400px", overflowY: "scroll" }}>
               {detectionData.map((detection, index) => (
                 <ol key={detection._id || index}>
-                  <li>{"Detected Item: " + detection.itemDetected}</li>
                   <li>{"Detected User: " + detection.getUserID}</li>
+                  <li>{"Detected Item: " + detection.itemDetected}</li>
                   <li>{"Confidence Score: " + detection.confidenceScore}</li>
                   <button onClick={() => {handleEdit(detection)}}>Edit</button>
                   <button onClick={() =>{handleDelete(detection._id)}} >Delete</button>
@@ -144,6 +144,9 @@ const LogPage = () => {
               <form onSubmit={handleSubmit} >
                 <label htmlFor="">Edit Detected Item:</label>
                 <input type="text" value={editing.itemDetected} onChange={(e) => setEditing({ ...editing, itemDetected: e.target.value })}  />
+                <br />
+                <label htmlFor="">Edit Confidence Score:</label>
+                <input type="text" value={editing.confidenceScore} onChange={(e) => setEditing({ ...editing, confidenceScore: e.target.value })}  />
                 <br />
                 <input type="submit" />
                 <button onClick={() => {setEditMode(false)}}>Close</button>
