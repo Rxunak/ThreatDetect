@@ -152,10 +152,7 @@ const LogPage = () => {
                 <button onClick={() => {setEditMode(false)}}>Close</button>
               </form>
             </div>) : null}
-            
-            <div>
-              <button>Clear</button>
-            </div>
+
           </div>
           <div>
             <h1>Text Analysis Detection</h1>
