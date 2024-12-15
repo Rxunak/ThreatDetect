@@ -1,3 +1,7 @@
+body {
+  padding-top: 60px;
+}
+
 .navbar {
   display: flex;
   justify-content: space-around;
@@ -5,16 +9,11 @@
   gap: 10px;
   background-color: #17202a;
   padding: 8px;
-
   position: fixed;
-  top: 0; /* Sticks it to the top */
-  left: 0; /* Aligns to the left */
-  width: 100%; /* Ensures it stretches across the width */
+  top: 0; 
+  left: 0; 
+  width: 100%; 
   z-index: 1000;
-}
-
-body {
-  padding-top: 60px;
 }
 
 li {
@@ -24,7 +23,7 @@ li {
 .navbar > div,
 .navbar > span {
   margin: 4px;
-  padding: 10px; /* Set padding and margin the same for both */
+  padding: 10px; 
 }
 
 .nav-links {
@@ -42,7 +41,12 @@ li {
 }
 
 .nav-links li:hover {
-  color: #5dade2; /* Changes color on hover */
+  color: #5dade2; 
+}
+
+.link{
+  color: white;
+  text-decoration: none;
 }
 
 .contact {
@@ -57,14 +61,17 @@ li {
   width: 100px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 2rem;
+  border: none;
 }
 
-.contact li {
+.buttonDiv button {
   cursor: pointer;
   transition: color 0.3s ease-in-out;
 }
 
-.contact li:hover {
+.buttonDiv button:hover {
   color: white;
 }
 

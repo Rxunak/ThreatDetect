@@ -21,19 +21,6 @@ const MainPage = () => {
               identifying dangerous content and offensive language in real time.
             </p>
           </div>
-
-          <div className="optionContainer">
-            <p className="option">What would you like to start with?</p>
-          </div>
-
-          <div className="button1">
-            <li className="live1">
-              <Link to="/live-detection">Live Detection</Link>
-            </li>
-            <li className="text1">
-              <Link to="/texttual-analysis-page">Text Analysis</Link>
-            </li>
-          </div>
         </div>
 
         <div className="secondaryContainer">

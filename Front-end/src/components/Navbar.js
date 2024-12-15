@@ -9,32 +9,27 @@ const Navbar = () => {
     localStorage.removeItem("auth");
 
     navigate("/login");
-  };
+  }; 
   return (
     <div className="navbar">
       <span className="logo">THREAT DETECT</span>
       <div className="nav-links">
-        <li>
-          {" "}
-          <Link to="/">Home</Link>
-        </li>
-        {/* <li>
-          {" "}
-          <Link to="/live-detection">Live Detection</Link>
-        </li> */}
-        <li>
-          <Link to="/texttual-analysis-page">Let's Chat</Link>
+        <li >
+          <Link to="/" className="link">Home</Link>
         </li>
         <li>
-          <Link to="/log-page">Log Detection</Link>
+          <Link to="/texttual-analysis-page" className="link">Let's Chat</Link>
         </li>
-      </div>
-      <div className="contact">
-        <li>Contact</li>
+        <li>
+          <Link to="/log-page" className="link">Log Detection</Link>
+        </li>
+        <li>
+          <Link to="/log-page" className="link">Contacts</Link>
+        </li>
       </div>
 
-      <div className="contact">
-        <button onClick={handleLogout}>Log out</button>
+      <div className="buttonDiv">
+        <button className="contact" onClick={handleLogout}>Log out</button>
       </div>
     </div>
   );
