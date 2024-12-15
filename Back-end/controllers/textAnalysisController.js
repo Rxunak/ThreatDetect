@@ -60,3 +60,18 @@ export const updateAnalysis = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const deleteAnalysis = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const analysis = await Analysis.findByIdAndDelete(id, req.body);
+    if (!analysis) {
+      return res.status(404).json({ message: "Analysis not found" });
+    }
+    const updatedAnalysis = await Analysis.findById(id);
+    res.status(200).json(updatedAnalysis);
+  } catch (error) {
+    console.log("Here not working")
+    res.status(500).json({ message: error.message });
+  }
+};

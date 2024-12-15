@@ -35,7 +35,7 @@ const LogPage = () => {
       }
     };
     fetchTextAnalysis();
-  }, []);
+  }, [textAnalysis]);
 
   const handleDelete = async (id) => {
       try {
@@ -64,12 +64,6 @@ const LogPage = () => {
     setTextAnalysisEdit(true);
     setTextAnalysisEditing(text);
   }
-
-  // useEffect(() => {
-  //   console.log(textAnalysisEditing)
-  // }, [textAnalysisEditing])
-
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -110,8 +104,6 @@ const LogPage = () => {
         body: JSON.stringify(textAnalysisEditing)
       })
 
-      
-
     if(response.ok){
         const updatedAnalysis = await response.json();
         console.log("This is the new detection",updatedAnalysis)
@@ -120,13 +112,30 @@ const LogPage = () => {
             textAnalyse._id === updatedAnalysis._id ? updatedAnalysis : textAnalyse
           )
         );
-
         setTextAnalysisEdit(false)
       }else{
         alert("not working")
       }
     }catch(error){
       console.log(error)
+    }
+  }
+
+  const handleDeleteText  = async (_id) => {
+    try {
+      const response = await fetch(`http://localhost:5001/api/analysis/${_id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setTextAnalysis((prevAnalysis) =>
+          prevAnalysis.filter((textAnalyse) => textAnalyse.id !== _id)
+        );
+      } else {
+        const data = await response.json();
+        alert(data.message || "Failed to delete the detection");
+      }
+    } catch (error) {
+      alert("An error occurred: " + error.message);
     }
   }
 
@@ -177,6 +186,7 @@ const LogPage = () => {
                   <li>{"Detected User: " + text.getUserID}</li>
                   <li>{"Detected Item: " + text.textAnalysed}</li>
                   <button onClick={() => {handleTextEdit(text)}}>Edit</button>
+                  <button onClick={() => {handleDeleteText(text._id)}}>Delete</button>
                 </ol>
               ))}
 
@@ -187,7 +197,6 @@ const LogPage = () => {
                 <input type="submit" />
                 <button onClick={() => {setTextAnalysisEdit(false)}}>Close</button>
                 </form>
-
                 ): null}
 
               
