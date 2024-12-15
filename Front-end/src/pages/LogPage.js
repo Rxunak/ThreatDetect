@@ -145,9 +145,10 @@ const LogPage = () => {
       <div className="mainContainerLog">
         <div>
           <div>
-            <h1>Knife / Weapon Detection</h1>
+            <h1>Blocked Users</h1>
             <div style={{ height: "400px", overflowY: "scroll" }}>
-              {detectionData.map((detection, index) => (
+              {detectionData.map((detection, index) => {
+                return detection.confidenceScore > "80%" ? (
                 <ol key={detection._id || index}>
                   <li>{"Detected User: " + detection.getUserID}</li>
                   <li>{"Detected Item: " + detection.itemDetected}</li>
@@ -155,7 +156,24 @@ const LogPage = () => {
                   <button onClick={() => {handleEdit(detection)}}>Edit</button>
                   <button onClick={() =>{handleDelete(detection._id)}} >Delete</button>
                 </ol>
-              ))}
+                ) : null
+              })}
+            </div>
+
+
+             <h1>Review</h1>
+            <div style={{ height: "400px", overflowY: "scroll" }}>
+              {detectionData.map((detection, index) => {
+                return detection.confidenceScore <= "60%" ? (
+                <ol key={detection._id || index}>
+                  <li>{"Detected User: " + detection.getUserID}</li>
+                  <li>{"Detected Item: " + detection.itemDetected}</li>
+                  <li>{"Confidence Score: " + detection.confidenceScore}</li>
+                  <button onClick={() => {handleEdit(detection)}}>Edit</button>
+                  <button onClick={() =>{handleDelete(detection._id)}} >Delete</button>
+                </ol>
+                ) : null
+              })}
             </div>
 
             {editMode && editing ? (<div>
