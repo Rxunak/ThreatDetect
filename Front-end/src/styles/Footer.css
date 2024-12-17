@@ -3,7 +3,6 @@
   height: auto;
   align-items: last baseline; 
 }
-
 .footer {
   display: flex;
   gap: 10px;
@@ -14,21 +13,18 @@
   height: 200px;
   background-color: #17202a;
 }
-
 .footerone{
   font-size: 1.5rem;
   display: flex;
   justify-content: center;
   color: aliceblue;
 }
-
 .footertwo{
   font-size: 1rem;
   display: flex;
   justify-content: center;
   color: aliceblue;
 }
-
 .footerthree{
   font-size: 1.5rem;
   display: flex;
@@ -36,8 +32,3 @@
   color: aliceblue;
   gap: 10px;
 }
-
-
-
-
-

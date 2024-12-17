@@ -4,9 +4,6 @@ import { RiInstagramFill } from "react-icons/ri";
 import { FaFacebook } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 
-
-
-
 const Footer = () => {
   return (
     <div className="mainfooter">
