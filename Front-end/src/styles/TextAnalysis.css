@@ -1,60 +1,113 @@
+
 .textMainContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 97vh;
   margin-top: 65px;
   width: auto;
-  border: 2px black solid;
 }
 
 .detectionContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  border: 2px solid black;
-  margin: 2px;
+  gap: 2rem;
   height: 700px;
-  width: 500px;
+  width: 400px;
   border-radius: 20px;
+  background-color: rgb(133, 135, 135);
+  
+}
+
+.list2{
+  background-color: white;
+  margin-bottom: 15px;
+  border-radius: 1rem;
+  border: 1px solid black;
 }
 
 .chatHead {
   border: 2px black solid;
   margin-top: 2px;
+  height: 10px;
+  width: 60px;
+  border-radius: 1rem;
+  margin-top: 10px;
 }
 
 .chatBody {
-  border: 2px solid black;
-  width: 400px;
-  height: 500px;
+  display: flex;
+  flex-direction: column;
+  width: 380px;
+  height: 600px;
+  border-radius: 10px;
 }
 
-.chatFootter {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+.chat{
+  height: 45rem;
+  padding: 1rem;
+}
+
+
+.chatOutput{
   padding: 10px;
-  gap: 1rem;
+}
+
+.chattext{
+  margin: 0%;
+  padding: 10px;
+  width: auto;
+  word-wrap: break-word;
+}
+
+.threat{
+  padding-left: 10px;
+  margin: 0%;
+  color: red;
+  font-style: italic;
+  font-size: small;
+  display: flex;
+}
+
+
+.inputField{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-top: 1rem;
+  padding: 5px;
+  border-top: 2px solid black;
+  
 }
 
 .text {
   width: 200px;
+  height: 30px;
+  border-radius: 2px;
+  border: none;
 }
 
-.threat {
-  font-size: 0.8rem;
-  color: red;
-  padding: 0;
-  border: 1px solid black;
-}
 
-.threat1 {
+.camera{
+  height: 30px;
   display: flex;
-  flex-direction: row;
-  color: rgb(168, 158, 158);
+  align-items: center;
 }
+
+.cameraIcon{
+  font-size: 20px;
+}
+
+.send{
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+.sendIcon{
+  font-size: 20px;
+}
+
 
 .modalOverlay {
   position: fixed;

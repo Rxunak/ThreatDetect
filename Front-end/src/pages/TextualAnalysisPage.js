@@ -9,8 +9,6 @@ const TextualAnalysisPage = () => {
       <div>
         <TextAnalysis />
       </div>
-
-      <Footer />
     </div>
   );
 };

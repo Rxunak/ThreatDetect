@@ -3,6 +3,9 @@ import * as toxicity from "@tensorflow-models/toxicity";
 import * as tf from "@tensorflow/tfjs";
 import "../styles/TextAnalysis.css";
 import Camera from "../components/Camera";
+import chat from "../assets/deltabackground.jpg";
+import { FaCamera } from "react-icons/fa";
+import { IoSend } from "react-icons/io5";
 
 const TextAnalysis = ({ socket, username, room }) => {
   const [inputValue, setInputValue] = useState("");
@@ -47,8 +50,6 @@ const TextAnalysis = ({ socket, username, room }) => {
       console.log("Model is not loaded or input is empty!");
     }
   };
-
-  console.log(analysisResult);
 
   //BACKEND SECTION
 
@@ -108,43 +109,55 @@ const TextAnalysis = ({ socket, username, room }) => {
   return (
     <div className="textMainContainer">
       <div className="detectionContainer">
-        <div className="chatHead">
-          <p>Let's Chat with Text Analysis</p>
-        </div>
+        <div className="chatHead" />
+        <div className="chatBody" style={{ backgroundImage: `url(${chat})` }}>
+          <div className="chat">
+            <ul className="chatOutput">
+              {chatHistory &&
+                chatHistory.map((chat, index) => {
+                  const filteredLabels = chat.analysis
+                    .filter((category) => category.results[0].match === true)
+                    .map((category) => category.label)
+                    .join(", ");
 
-        <div className="chatBody">
-          <ul>
-            {chatHistory &&
-              chatHistory.map((chat, index) => (
-                <li key={index}>
-                  <p>{chat.messageInput}</p>
-                  <ul>
-                    {chat.analysis
-                      .filter((category) => category.results[0].match === true)
-                      .map((category) => `- Violets: ${category.label}`)
-                      .join(", ")}
-                  </ul>
-                </li>
-              ))}
-          </ul>
-        </div>
-
-        <div className="chatFootter">
-          <div>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={onChange}
-              placeholder="Type...."
-              className="text"
-            />
+                  return (
+                    <li key={index} className="list2">
+                      <p className="chattext">{chat.messageInput}</p>
+                      {filteredLabels && (
+                        <p className="threat">
+                          <li>
+                            *This text contains: <b>{filteredLabels}</b>*
+                          </li>
+                        </p>
+                      )}
+                    </li>
+                  );
+                })}
+            </ul>
           </div>
 
-          <div>
-            <button onClick={textAnalyse}>Send</button>
-            <button onClick={OpenCamera} style={{ marginLeft: "10px" }}>
-              Open Camera
-            </button>
+          <div className="inputField">
+            <div className="textArea">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={onChange}
+                placeholder="Type...."
+                className="text"
+              />
+            </div>
+
+            <div className="camera">
+              <button onClick={OpenCamera} className="cameraIcon">
+                <FaCamera />
+              </button>
+            </div>
+
+            <div className="send">
+              <button onClick={textAnalyse} className="sendIcon">
+                <IoSend />
+              </button>
+            </div>
           </div>
         </div>
       </div>
