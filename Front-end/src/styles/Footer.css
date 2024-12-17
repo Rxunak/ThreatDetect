@@ -1,7 +1,7 @@
 .mainfooter {
   display: flex;
   height: auto;
-  align-items: last baseline;
+  align-items: last baseline; 
 }
 
 .footer {
@@ -15,8 +15,29 @@
   background-color: #17202a;
 }
 
-.footer > div {
-  border: 2px solid black;
-  width: 100px;
-  height: 50px;
+.footerone{
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  color: aliceblue;
 }
+
+.footertwo{
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  color: aliceblue;
+}
+
+.footerthree{
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  color: aliceblue;
+  gap: 10px;
+}
+
+
+
+
+
