@@ -67,6 +67,7 @@ export const deleteDetections = async (req, res) => {
     if (!detections) {
       return res.status(404).json({ message: "Detection not found" });
     }
+    res.status(200).json({ message: "Detection deleted successfully" });
   } catch (error) {
     console.error("Error in deleteDetections:", error);
     res.status(500).json({ message: error.message });
