@@ -38,7 +38,7 @@ const LogPage = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    console.log('handle called with id', id)
+    console.log("handle called with id", id);
     try {
       const response = await fetch(
         `http://localhost:5001/api/detections/${id}`,
@@ -52,10 +52,8 @@ const LogPage = () => {
           const updatedDetections = prevDetections.filter(
             (detection) => detection._id !== id
           );
-          return [...updatedDetections]; 
+          return [...updatedDetections];
         });
-
-
       } else {
         const data = await response.json();
         alert(data.message || "Failed to delete the detection");
@@ -142,7 +140,7 @@ const LogPage = () => {
   };
 
   const handleDeleteText = async (_id) => {
-    console.log(_id)
+    console.log(_id);
     try {
       const response = await fetch(
         `http://localhost:5001/api/analysis/${_id}`,
@@ -150,15 +148,15 @@ const LogPage = () => {
           method: "DELETE",
         }
       );
-  
+
       if (response.ok) {
-        console.log("Before", textAnalysis)
+        console.log("Before", textAnalysis);
         setTextAnalysis((prevAnalysis) => {
           const updatedAnalysis = prevAnalysis.filter(
             (textAnalyse) => textAnalyse._id !== _id
           );
-          console.log("After", textAnalysis)
-          return [...updatedAnalysis]; 
+          console.log("After", textAnalysis);
+          return [...updatedAnalysis];
         });
       } else {
         const data = await response.json();
@@ -180,7 +178,7 @@ const LogPage = () => {
 
           <div
             className="detectionOne"
-            style={{ height: "400px", overflowY: "scroll" }}
+            // style={{ height: "400px", overflowY: "scroll" }}
           >
             {detectionData.map((detection, index) => {
               return detection.confidenceScore > "80%" ? (
@@ -213,7 +211,10 @@ const LogPage = () => {
                       <button
                         className="deleteButton"
                         onClick={() => {
-                          console.log("Delete button clicked for ID:", detection._id);
+                          console.log(
+                            "Delete button clicked for ID:",
+                            detection._id
+                          );
                           handleDelete(detection._id);
                         }}
                       >
@@ -232,10 +233,7 @@ const LogPage = () => {
             <h1 className="logHeading">Review blocked users</h1>
           </div>
 
-          <div
-            className="reviewDetection"
-            style={{ height: "400px", overflowY: "scroll" }}
-          >
+          <div className="reviewDetection">
             {detectionData.map((detection, index) => {
               return detection.confidenceScore <= "60%" ? (
                 <ol className="orderList" key={detection._id || index}>
@@ -326,64 +324,66 @@ const LogPage = () => {
             <h1 className="logHeading">Text Analysis Detection</h1>
           </div>
 
-          <div
-            style={{
-              height: "400px",
-              overflowY: "scroll",
-              paddingBottom: "2rem",
-            }}
-          >
+          <div className="textDetection">
             {textAnalysis.map((text, index) => (
-              <ol key={text._id || index}>
-                <li>{"Detected User: " + text.getUserID}</li>
-                <li>{"Detected Item: " + text.textAnalysed}</li>
-                <button
-                  onClick={() => {
-                    handleTextEdit(text);
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => {
-                    handleDeleteText(text._id);
-                  }}
-                >
-                  Delete
-                </button>
+              <ol className="orderList" key={text._id || index}>
+                <div className="reviewList">
+                  <div className="listOL">
+                    <li>{<strong>Detected User: </strong>}{text.getUserID}</li>
+                    <li className="textWrap">{<strong>Detected Item: </strong>}{text.textAnalysed}</li>
+                  </div>
+
+                  <div className="buttonList">
+                    <button
+                      className="editButton"
+                      onClick={() => {
+                        handleTextEdit(text);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="deleteButton"
+                      onClick={() => {
+                        handleDeleteText(text._id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
               </ol>
             ))}
           </div>
-
-          <div
-            className="popup"
-            style={{ display: textAnalysisEdit ? "flex" : "none" }}
-          >
-            <div className="popup-content">
-              {textAnalysisEdit && textAnalysisEditing ? (
-                <form onSubmit={handleSubmitText}>
-                  <label htmlFor="">Edit Detected User</label>
-                  <input
-                    type="text"
-                    value={textAnalysisEditing.textAnalysed}
-                    onChange={(e) =>
-                      setTextAnalysisEditing({
-                        ...textAnalysisEditing,
-                        textAnalysed: e.target.value,
-                      })
-                    }
-                  />
-                  <input type="submit" />
-                  <button
-                    onClick={() => {
-                      setTextAnalysisEdit(false);
-                    }}
-                  >
-                    Close
-                  </button>
-                </form>
-              ) : null}
-            </div>
+        </div>
+        <div
+          className="popup"
+          style={{ display: textAnalysisEdit ? "flex" : "none" }}
+        >
+          <div className="popup-content">
+            {textAnalysisEdit && textAnalysisEditing ? (
+              <form onSubmit={handleSubmitText}>
+                <label htmlFor="">Edit Detected User</label>
+                <input
+                  type="text"
+                  value={textAnalysisEditing.textAnalysed}
+                  onChange={(e) =>
+                    setTextAnalysisEditing({
+                      ...textAnalysisEditing,
+                      textAnalysed: e.target.value,
+                    })
+                  }
+                />
+                <input type="submit" />
+                <button
+                  onClick={() => {
+                    setTextAnalysisEdit(false);
+                  }}
+                >
+                  Close
+                </button>
+              </form>
+            ) : null}
           </div>
         </div>
       </div>
