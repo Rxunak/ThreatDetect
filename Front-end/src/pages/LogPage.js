@@ -10,6 +10,7 @@ const LogPage = () => {
   const [editing, setEditing] = useState(null);
   const [textAnalysisEdit, setTextAnalysisEdit] = useState(false);
   const [textAnalysisEditing, setTextAnalysisEditing] = useState(null);
+  const [category, setCategory] = useState([]);
 
   useEffect(() => {
     const fetchDetection = async () => {
@@ -36,6 +37,10 @@ const LogPage = () => {
     };
     fetchTextAnalysis();
   }, []);
+
+  useEffect(() => {
+    console.log(textAnalysis);
+  });
 
   const handleDelete = async (id) => {
     console.log("handle called with id", id);
@@ -329,8 +334,23 @@ const LogPage = () => {
               <ol className="orderList" key={text._id || index}>
                 <div className="reviewList">
                   <div className="listOL">
-                    <li>{<strong>Detected User: </strong>}{text.getUserID}</li>
-                    <li className="textWrap">{<strong>Detected Item: </strong>}{text.textAnalysed}</li>
+                    <li>
+                      {<strong>Detected User: </strong>}
+                      {text.getUserID}
+                    </li>
+                    <li className="textWrap">
+                      {<strong>Detected Item: </strong>}
+                      {text.textAnalysed}
+                    </li>
+
+                    <ul className="paddingZero">
+                      <p className="headingCategory">{<strong>Detected Category: </strong>}</p>
+                      {text.analysis.length === 0 ? "This text does not meet any threat category" : text.analysis.map((analysisItem, analysisIndex) => (
+                        <ul key={analysisIndex} className="category">
+                          <li>{analysisItem.label}</li>
+                        </ul>
+                      ))}
+                    </ul>
                   </div>
 
                   <div className="buttonList">
