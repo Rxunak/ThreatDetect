@@ -142,60 +142,6 @@ const Camera = () => {
     setConScore(finalconfidence)
   }
 
- 
-  
-
-  // let lastSavedTime = 0;
-  // const saveImage = (predictions) => {
-  //   let currentTime = Date.now();
-
-  //   if (currentTime - lastSavedTime > 50000) {
-  //     lastSavedTime = currentTime;
-
-  //     predictions.forEach((predicts) => {
-  //       if (predicts.class === "person") {
-  //         console.log(`${predicts.class} detected`);
-
-  //         const canvas = canvasRef.current;
-  //         const context = canvas.getContext("2d");
-  //         const video = videoRef.current;
-
-  //         context.clearRect(
-  //           0,
-  //           0,
-  //           canvasRef.current.width,
-  //           canvasRef.current.height
-  //         );
-
-  //         context.drawImage(
-  //           video,
-  //           predicts.bbox[0],
-  //           predicts.bbox[1],
-  //           predicts.bbox[2],
-  //           predicts.bbox[3],
-  //           0,
-  //           0,
-  //           canvas.width,
-  //           canvas.height
-  //         );
-
-  //         // canvas.toBlob((blob) => {
-  //         //   const formData = new FormData();
-  //         //   //Name, valye, filename
-  //         //   formData.append("image", blob, "image.png");
-
-  //         //   fetch("http://localhost:5001/upload", {
-  //         //     method: "POST",
-  //         //     body: formData,
-  //         //   })
-  //         //     .then((response) => response.json())
-  //         //     .then((data) => console.log(data))
-  //         //     .catch((error) => console.log("Unable to send image", error));
-  //         // }, "image/png");
-  //       }
-  //     });
-  //   }
-  // };
   //BACKEND PART
 
   useEffect(() => {
@@ -232,22 +178,40 @@ const Camera = () => {
             );
 
             if (!response.ok) {
+              
               throw new Error("Failed to send data");
             }
 
             const result = await response.json();
             console.log("Detection sent:", result);
+
+            if (result.isBlocked) {
+              alert("You have been blocked due to a violation.");
+              // Update localStorage
+              localStorage.setItem(
+                "auth",
+                JSON.stringify({
+                  ...getUserID,
+                  isBlocked: true, // Set isBlocked to true
+                })
+              );
+  
+              // Redirect to the blocked page
+              window.location.href = "/block";
+            }
+
+            console.log(result)
           } catch (error) {
             console.error("Error:", error);
           }
         };
 
         sendDetectionData();
-      }, 30000);
+      }, 30);
     }
 
     return () => clearInterval(intervalId);
-  }, [item]);
+  }, [item, conScore, isDetecting]);
 
   return (
     <div className="cameraMainContainer">

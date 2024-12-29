@@ -9,10 +9,16 @@ const ProtectedRoute = ({ element, requiredRole }) => {
     return <Navigate to="/login" replace />;
   }
 
+  if (auth?.isBlocked){
+    return <Navigate to="/block" replace/>;
+  }
+
   if (requiredRole && auth.role !== requiredRole) {
     // Redirect to main page if role does not match requiredRole
     return <Navigate to="/" replace />;
   }
+
+
 
   return element;
 };

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import { MdEditSquare } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
 import "../styles/LogDetection.css";
 
 const LogPage = () => {
@@ -18,6 +20,7 @@ const LogPage = () => {
         const response = await fetch("http://localhost:5001/api/detections");
         const data = await response.json();
         setDetectionData(data);
+        console.log(data);
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
@@ -172,6 +175,24 @@ const LogPage = () => {
     }
   };
 
+  const unblockUser = async (userId) => {
+    try {
+      const response = await fetch(`/api/users/unblock/${userId}`, {
+        method: "PUT",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to unblock user");
+      }
+
+      const result = await response.json();
+      alert(result.message);
+      // Optionally refresh the user list here
+    } catch (error) {
+      console.error("Error unblocking user:", error);
+      alert("Failed to unblock user");
+    }
+  };
   return (
     <div className="mainContainerLog">
       <Navbar />
@@ -181,12 +202,11 @@ const LogPage = () => {
             <h1 className="logHeading">Blocked Users</h1>
           </div>
 
-          <div
-            className="detectionOne"
-            // style={{ height: "400px", overflowY: "scroll" }}
-          >
+          <div className="detectionOne">
             {detectionData.map((detection, index) => {
-              return detection.confidenceScore > "80%" ? (
+              const date = new Date(Date.parse(detection.timestamp));
+              const formattedDate = date.toUTCString();
+              return detection.confidenceScore >= "80%" ? (
                 <ol className="orderList" key={detection._id || index} type="1">
                   <div className="mainListComp">
                     <div className="listOL">
@@ -202,6 +222,10 @@ const LogPage = () => {
                         {<strong>Confidence Score: </strong>}
                         {detection.confidenceScore}
                       </li>
+                      <li>
+                        {<strong>Detected Date/Time: </strong>}
+                        {formattedDate}
+                      </li>
                     </div>
 
                     <div className="buttonList">
@@ -211,7 +235,7 @@ const LogPage = () => {
                           handleEdit(detection);
                         }}
                       >
-                        Edit
+                        <MdEditSquare />
                       </button>
                       <button
                         className="deleteButton"
@@ -223,7 +247,7 @@ const LogPage = () => {
                           handleDelete(detection._id);
                         }}
                       >
-                        Delete
+                        <MdDeleteForever />
                       </button>
                     </div>
                   </div>
@@ -240,7 +264,9 @@ const LogPage = () => {
 
           <div className="reviewDetection">
             {detectionData.map((detection, index) => {
-              return detection.confidenceScore <= "60%" ? (
+              const date = new Date(Date.parse(detection.timestamp));
+              const formattedDate = date.toUTCString();
+              return detection.confidenceScore < "80%" ? (
                 <ol className="orderList" key={detection._id || index}>
                   <div className="reviewList">
                     <div className="listOL">
@@ -256,6 +282,10 @@ const LogPage = () => {
                         {<strong>Confidence Score: </strong>}
                         {detection.confidenceScore}
                       </li>
+                      <li>
+                        {<strong>Detected Date/Time: </strong>}
+                        {formattedDate}
+                      </li>
                     </div>
 
                     <div className="buttonList">
@@ -265,7 +295,7 @@ const LogPage = () => {
                           handleEdit(detection);
                         }}
                       >
-                        Edit
+                        <MdEditSquare />
                       </button>
                       <button
                         className="deleteButton"
@@ -273,7 +303,7 @@ const LogPage = () => {
                           handleDelete(detection._id);
                         }}
                       >
-                        Delete
+                        <MdDeleteForever />
                       </button>
                     </div>
                   </div>
@@ -330,50 +360,63 @@ const LogPage = () => {
           </div>
 
           <div className="textDetection">
-            {textAnalysis.map((text, index) => (
-              <ol className="orderList" key={text._id || index}>
-                <div className="reviewList">
-                  <div className="listOL">
-                    <li>
-                      {<strong>Detected User: </strong>}
-                      {text.getUserID}
-                    </li>
-                    <li className="textWrap">
-                      {<strong>Detected Item: </strong>}
-                      {text.textAnalysed}
-                    </li>
+            {textAnalysis.map((text, index) => {
+              const date = new Date(Date.parse(text.timestamp));
+              const formattedDate = date.toUTCString();
 
-                    <ul className="paddingZero">
-                      <p className="headingCategory">{<strong>Detected Category: </strong>}</p>
-                      {text.analysis.length === 0 ? "This text does not meet any threat category" : text.analysis.map((analysisItem, analysisIndex) => (
-                        <ul key={analysisIndex} className="category">
-                          <li>{analysisItem.label}</li>
-                        </ul>
-                      ))}
-                    </ul>
-                  </div>
+              return (
+                <ol className="orderList" key={text._id || index}>
+                  <div className="reviewList">
+                    <div className="listOL">
+                      <li>
+                        {<strong>Detected User: </strong>}
+                        {text.getUserID}
+                      </li>
+                      <li className="textWrap">
+                        {<strong>Detected Item: </strong>}
+                        {text.textAnalysed}
+                      </li>
+                      <li>
+                        {<strong>Date/Time: </strong>}
+                        {formattedDate}
+                      </li>
 
-                  <div className="buttonList">
-                    <button
-                      className="editButton"
-                      onClick={() => {
-                        handleTextEdit(text);
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="deleteButton"
-                      onClick={() => {
-                        handleDeleteText(text._id);
-                      }}
-                    >
-                      Delete
-                    </button>
+                      <ul className="paddingZero">
+                        <p className="headingCategory">
+                          {<strong>Detected Category: </strong>}
+                        </p>
+                        {text.analysis.length === 0
+                          ? "This text does not meet any threat category"
+                          : text.analysis.map((analysisItem, analysisIndex) => (
+                              <ul key={analysisIndex} className="category">
+                                <li>{analysisItem.label}</li>
+                              </ul>
+                            ))}
+                      </ul>
+                    </div>
+
+                    <div className="buttonList">
+                      <button
+                        className="editButton"
+                        onClick={() => {
+                          handleTextEdit(text);
+                        }}
+                      >
+                        <MdEditSquare />
+                      </button>
+                      <button
+                        className="deleteButton"
+                        onClick={() => {
+                          handleDeleteText(text._id);
+                        }}
+                      >
+                        <MdDeleteForever />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </ol>
-            ))}
+                </ol>
+              );
+            })}
           </div>
         </div>
         <div

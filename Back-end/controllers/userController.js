@@ -52,8 +52,11 @@ export const loginUser = async (req, res) => {
     // Send role along with login response
     res
       .status(200)
-      .json({ message: "Login successful", userId: user._id, role: user.role });
+      .json({ message: "Login successful", userId: user._id, role: user.role, isBlocked: user.isBlocked });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+
+

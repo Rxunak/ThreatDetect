@@ -69,6 +69,7 @@ const Login = () => {
           isAuthenticated: true,
           userId: data.userId,
           role: data.role,
+          isBlocked: data.isBlocked
         })
       );
       setInputFields({ email: "", password: "" });

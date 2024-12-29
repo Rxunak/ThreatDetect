@@ -6,6 +6,8 @@ import LogPage from "./pages/LogPage";
 import TextualAnalysisPage from "./pages/TextualAnalysisPage";
 import Login from "./components/Login";
 import Signup from "./components/SignUp";
+import BlockedRedirect from "./pages/BlockedRedirect";
+
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -22,6 +24,7 @@ function App() {
             path="/live-detection"
             element={<ProtectedRoute element={<LiveDetectionPage />} />}
           />
+          <Route path="/block" element={<BlockedRedirect />} />
           <Route
             path="/texttual-analysis-page"
             element={<ProtectedRoute element={<TextualAnalysisPage />} />}
