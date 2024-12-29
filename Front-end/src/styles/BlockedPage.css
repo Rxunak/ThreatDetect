@@ -1,0 +1,88 @@
+.mainBlockPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 1rem;
+}
+
+.secondMainPage {
+  height: 500px;
+  width: 500px;
+  padding: 1rem;
+  background-color: #b0d6ef;
+  border-radius: 6px;
+}
+
+.blockPageHeading {
+  display: flex;
+  justify-content: center;
+}
+
+.blockPageImage {
+  display: flex;
+  justify-content: center;
+}
+
+.blockPageImage1 {
+  height: 150px;
+  width: 150px;
+  border-radius: 5px;
+}
+
+.blockPageText {
+  display: flex;
+  justify-content: center;
+}
+
+.blockPageButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  height: 3rem;
+}
+
+.button1 {
+  border: none;
+  font-size: 2rem;
+  border-radius: 10px;
+  display: flex;
+}
+
+.button1:hover {
+  cursor: pointer;
+  background-color: white;
+}
+
+.button2 {
+  border: none;
+  font-size: 1.9rem;
+  border-radius: 10px;
+  display: flex;
+}
+
+.button2css {
+  display: flex;
+  justify-content: center;
+  color: black;
+}
+
+.button2:hover {
+  cursor: pointer;
+  background-color: white;
+}
+
+.firstBlock {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 350px;
+}
+
+.secondBlock {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 150px;
+}
