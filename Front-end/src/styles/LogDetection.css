@@ -1,16 +1,18 @@
 .mainContent{
   display: flex;
+  flex-direction: column;
   gap: 1rem;
   padding: 1rem;
   margin-top: 5rem;
-  height: 85vh; 
+  height: auto; 
 }
 
 .blockedUsers{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-evenly;
   padding: 1rem;
-  width: 500px;
+  width: auto;
   height: auto;
 }
 
@@ -98,11 +100,14 @@
 
 .reviewDetection{
   height: auto;
+  width: 500px;
   overflow: scroll;
 }
 
 .detectionOne{
+  padding: 1rem;
   height: auto;
+  width: 500px;
   overflow: scroll;
 }
 
@@ -112,6 +117,12 @@
   padding: 1rem;
   width: 500px;
   height: auto;
+}
+
+.textAnalysisBlocked{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
 .textDetection{
@@ -140,6 +151,11 @@
   width: 90%;
   max-width: 500px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.headingtext{
+  display: flex;
+  justify-content: center;
 }
 
 
