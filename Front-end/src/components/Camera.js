@@ -10,7 +10,7 @@ const Camera = () => {
 
   const [message, setMessage] = useState("");
   const [isDetecting, setIsDetecting] = useState(false);
-  const [item, setItem] = useState("");
+  const [item, setItem] = useState(""); 
   const [stream, setStream] = useState(null);
   const [conScore, setConScore] = useState([])
 
@@ -178,7 +178,6 @@ const Camera = () => {
             );
 
             if (!response.ok) {
-              
               throw new Error("Failed to send data");
             }
 
@@ -237,8 +236,8 @@ const Camera = () => {
             )}
           </div>
           <div>
-            <button onClick={handleDetection}>
-              {isDetecting ? "Stop " : "Start"}
+            <button onClick={handleDetection} className="detectButton">
+              {isDetecting ? "Stop Detection" : "Start Detection"}
             </button>
           </div>
         </div>

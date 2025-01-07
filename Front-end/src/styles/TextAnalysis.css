@@ -123,9 +123,9 @@
 }
 
 .modalContent {
-  background-color: #5dade2;
+  background-color: #e1e3e4;
   border-radius: 30px;
-  width: 600px;
+  width: 520px;
   margin-bottom: 100px;
   height: 800px;
   position: relative;
@@ -134,8 +134,15 @@
 .closeButton {
   position: absolute;
   top: 750px;
-  left: 250px;
-  background-color: red;
+  left: 245px;
+  font-size: 1.5rem;
+  color: black;
+  background: none;
   border: none;
   cursor: pointer;
+}
+
+.closeButton:hover{
+  cursor: pointer;
+  color: red;
 }

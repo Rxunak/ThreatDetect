@@ -1,6 +1,7 @@
 import Analysis from "../models/textAnalysis.js";
 
 import { sendEmailAlert } from "../Email/EmailRoute.js";
+import User from "../models/User.js";
 
 export const saveAnalysis = async (req, res) => {
   try {
@@ -12,10 +13,27 @@ export const saveAnalysis = async (req, res) => {
       "New Detection Alert",
       `A new detection has been identified: ${textAnalysed} by user ${getUserID}`
     );
+
+    let isBlocked = false;
+    if(analysis.length >=1){
+      const user = await User.findByIdAndUpdate(
+        getUserID,
+        {isBlocked: true},
+        {new: true}
+      )
+
+      if (user) {
+        isBlocked = user.isBlocked;
+        console.log(`user ${getUserID} has been blocked`)
+      }else{
+        console.log(`user ${getUserID} all good`)
+      }
+    }
     res.status(201).json({
       message: "Text analysis has been succesfully saved",
       newAnalysis,
       getUserID,
+      isBlocked
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

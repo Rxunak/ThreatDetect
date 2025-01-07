@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import { MdEditSquare } from "react-icons/md";
-import { MdDeleteForever } from "react-icons/md";
 import "../styles/LogDetection.css";
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 
 const LogPage = () => {
   const [detectionData, setDetectionData] = useState([]);
@@ -12,6 +12,8 @@ const LogPage = () => {
   const [editing, setEditing] = useState(null);
   const [textAnalysisEdit, setTextAnalysisEdit] = useState(false);
   const [textAnalysisEditing, setTextAnalysisEditing] = useState(null);
+  const [user, setUser] = useState([]);
+  const [selectedSection, setSelectedSection] = useState("home");
 
   useEffect(() => {
     const fetchDetection = async () => {
@@ -41,7 +43,20 @@ const LogPage = () => {
   }, []);
 
   useEffect(() => {
-    console.log(textAnalysis);
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/api/users/users");
+        const data = await response.json();
+        setUser(data);
+      } catch (error) {
+        console.log("Error while fetching the data", error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    console.log("thgus is user data", user);
   });
 
   const handleDelete = async (id) => {
@@ -174,361 +189,429 @@ const LogPage = () => {
     }
   };
 
-  const unblockUser = async (userId) => {
+  const handleBlockUser = async (_id) => {
     try {
-      const response = await fetch(`/api/users/unblock/${userId}`, {
-        method: "PUT",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to unblock user");
-      }
+      const response = await fetch(
+        `http://localhost:5001/api/users/block/${_id}`,
+        {
+          method: "PATCH",
+        }
+      );
 
       const result = await response.json();
-      alert(result.message);
-      // Optionally refresh the user list here
+
+      if (response.ok) {
+        setUser((prevUsers) =>
+          prevUsers.map((user) =>
+            user._id === _id ? { ...user, isBlocked: true } : user
+          )
+        );
+      } else {
+        alert(result.message);
+      }
     } catch (error) {
-      console.error("Error unblocking user:", error);
-      alert("Failed to unblock user");
+      console.log("Error blocking user:", error);
+      alert("An error occurred while blocking the user");
     }
   };
+
+  const handleUnblockUser = async (_id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5001/api/users/unblock/${_id}`,
+        {
+          method: "PATCH",
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setUser((prevUsers) =>
+          prevUsers.map((user) =>
+            user._id === _id ? { ...user, isBlocked: false } : user
+          )
+        );
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.log("Error blocking user:", error);
+      alert("An error occurred while blocking the user");
+    }
+  };
+
+  const totalNumberofBlockedDetection = detectionData.filter(
+    (detection) => detection.confidenceScore >= "80%"
+  ).length;
+
+  const totalNumberofReviewdDetection = detectionData.filter(
+    (detection) => detection.confidenceScore < "80%"
+  ).length;
+
+  const totalTextBlocked = textAnalysis.filter(
+    (text) => text.analysis.length >= 1
+  ).length;
+
+  const totalReviewBlocked = textAnalysis.filter(
+    (text) => text.analysis.length === 0
+  ).length;
   return (
     <div className="mainContainerLog">
       <Navbar />
-      <div className="mainContent">
-      <div className="headingtext">
-          <h1>Threat Detection</h1>
-        </div>
-        <div className="blockedUsers">
-          <div className="detectionOne">
-            <div className="loghead">
-              <h1 className="logHeading">Blocked Users</h1>
-            </div>
-            {detectionData.map((detection, index) => {
-              const date = new Date(Date.parse(detection.timestamp));
-              const formattedDate = date.toUTCString();
-              return detection.confidenceScore >= "80%" ? (
-                <ol className="orderList" key={detection._id || index} type="1">
-                  <div className="mainListComp">
-                    <div className="listOL">
-                      <li>
-                        {<strong>Detected User: </strong>}
-                        {detection.getUserID}
-                      </li>
-                      <li>
-                        {<strong>Detected Item: </strong>}
-                        {detection.itemDetected}
-                      </li>
-                      <li>
-                        {<strong>Confidence Score: </strong>}
-                        {detection.confidenceScore}
-                      </li>
-                      <li>
-                        {<strong>Detected Date/Time: </strong>}
-                        {formattedDate}
-                      </li>
-                    </div>
 
-                    <div className="buttonList">
-                      <button
-                        className="editButton"
-                        onClick={() => {
-                          handleEdit(detection);
-                        }}
-                      >
-                        <MdEditSquare />
-                      </button>
-                      <button
-                        className="deleteButton"
-                        onClick={() => {
-                          console.log(
-                            "Delete button clicked for ID:",
-                            detection._id
-                          );
-                          handleDelete(detection._id);
-                        }}
-                      >
-                        <MdDeleteForever />
-                      </button>
+      <div className="sidebarMain">
+        <div className="sidebar">
+          <ul className="tabs">
+            <li
+              className={`sidebar-bar ${
+                selectedSection === "home" ? "active" : ""
+              }`}
+              onClick={() => setSelectedSection("home")}
+            >
+              Admin Home
+            </li>
+            <li
+              className={`sidebar-bar ${
+                selectedSection === "detection" ? "active" : ""
+              }`}
+              onClick={() => setSelectedSection("detection")}
+            >
+              Detection
+            </li>
+            <li
+              className={`sidebar-bar ${
+                selectedSection === "textAnalysis" ? "active" : ""
+              }`}
+              onClick={() => setSelectedSection("textAnalysis")}
+            >
+              Text Analysis
+            </li>
+            <li
+              className={`sidebar-bar ${
+                selectedSection === "userManagement" ? "active" : ""
+              }`}
+              onClick={() => setSelectedSection("userManagement")}
+            >
+              User Managment
+            </li>
+          </ul>
+        </div>
+
+        <div className="content-area">
+          {selectedSection === "home" && (
+            <div className="logPageHomeMain">
+              <div className="logPageHome">
+                <div className="welcome">
+                  <h1>Welcome, Admin!</h1>
+                  <p className="overview">
+                    Here’s an overview of the system at a glance.
+                  </p>
+                </div>
+
+                <div className="glance">
+                  <div className="blockedDetec">
+                    <div className="glanceTab">
+                      <div className="glanceTabs">
+                        <p>{totalNumberofBlockedDetection}</p>
+                      </div>
+                    </div>
+                    <div className="textTab">
+                      <p>Blocked Detection</p>
                     </div>
                   </div>
-                </ol>
-              ) : null;
-            })}
-          </div>
 
-          <div className="review">
-            <div className="loghead">
-              <h1 className="logHeading">Review blocked users</h1>
-            </div>
-
-            <div className="reviewDetection">
-              {detectionData.map((detection, index) => {
-                const date = new Date(Date.parse(detection.timestamp));
-                const formattedDate = date.toUTCString();
-                return detection.confidenceScore < "80%" ? (
-                  <ol className="orderList" key={detection._id || index}>
-                    <div className="reviewList">
-                      <div className="listOL">
-                        <li>
-                          {<strong>Detected User: </strong>}
-                          {detection.getUserID}
-                        </li>
-                        <li>
-                          {<strong>Detected Item: </strong>}
-                          {detection.itemDetected}
-                        </li>
-                        <li>
-                          {<strong>Confidence Score: </strong>}
-                          {detection.confidenceScore}
-                        </li>
-                        <li>
-                          {<strong>Detected Date/Time: </strong>}
-                          {formattedDate}
-                        </li>
-                      </div>
-
-                      <div className="buttonList">
-                        <button
-                          className="editButton"
-                          onClick={() => {
-                            handleEdit(detection);
-                          }}
-                        >
-                          <MdEditSquare />
-                        </button>
-                        <button
-                          className="deleteButton"
-                          onClick={() => {
-                            handleDelete(detection._id);
-                          }}
-                        >
-                          <MdDeleteForever />
-                        </button>
+                  <div className="blockedDetec">
+                    <div className="glanceTab">
+                      <div className="glanceTabs">
+                        <p>{totalNumberofReviewdDetection}</p>
                       </div>
                     </div>
-                  </ol>
-                ) : null;
-              })}
-            </div>
-          </div>
+                    <div className="textTab">
+                      <p>Pending Detection Review</p>
+                    </div>
+                  </div>
 
-          <div
-            className="popup"
-            style={{ display: editMode ? "flex" : "none" }}
-          >
-            <div className="popup-content">
-              {editMode && editing ? (
-                <div>
-                  <form onSubmit={handleSubmit}>
-                    <label htmlFor="">Edit Detected Item:</label>
-                    <input
-                      type="text"
-                      value={editing.itemDetected}
-                      onChange={(e) =>
-                        setEditing({ ...editing, itemDetected: e.target.value })
-                      }
-                    />
-                    <br />
-                    <label htmlFor="">Edit Confidence Score:</label>
-                    <input
-                      type="text"
-                      value={editing.confidenceScore}
-                      onChange={(e) =>
-                        setEditing({
-                          ...editing,
-                          confidenceScore: e.target.value,
-                        })
-                      }
-                    />
-                    <br />
-                    <input type="submit" />
-                    <button
-                      onClick={() => {
-                        setEditMode(false);
-                      }}
-                    >
-                      Close
-                    </button>
-                  </form>
+                  <div className="blockedDetec">
+                    <div className="glanceTab">
+                      <div className="glanceTabs">
+                        <p>{totalTextBlocked}</p>
+                      </div>
+                    </div>
+                    <div className="textTab">
+                      <p>Blocked Text</p>
+                    </div>
+                  </div>
+
+                  <div className="blockedDetec">
+                    <div className="glanceTab">
+                      <div className="glanceTabs">
+                        <p>{totalReviewBlocked}</p>
+                      </div>
+                    </div>
+                    <div className="textTab">
+                      <p>Pending Text Review</p>
+                    </div>
+                  </div>
                 </div>
-              ) : null}
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div className="headingtext">
-          <h1>Text Analysis Detection</h1>
-        </div>
-
-        <div className="textAnalysisBlocked">
-          <div className="textAnalysis">
-            <div className="loghead">
-              {" "}
-              <h1 className="logHeading">Blocked Users</h1>
-            </div>
-
-            <div className="textDetection">
-              {textAnalysis.map((text, index) => {
-                const date = new Date(Date.parse(text.timestamp));
-                const formattedDate = date.toUTCString();
-
-                return text.analysis.length >= 1 ? (
-                  <ol className="orderList" key={text._id || index}>
-                    <div className="reviewList">
-                      <div className="listOL">
-                        <li>
-                          {<strong>Detected User: </strong>}
-                          {text.getUserID}
-                        </li>
-                        <li className="textWrap">
-                          {<strong>Detected Item: </strong>}
-                          {text.textAnalysed}
-                        </li>
-                        <li>
-                          {<strong>Date/Time: </strong>}
-                          {formattedDate}
-                        </li>
-
-                        <ul className="paddingZero">
-                          <p className="headingCategory">
-                            {<strong>Detected Category: </strong>}
+          )}
+          {selectedSection === "detection" && (
+            <div className="detection">
+              <div className="blockedDetection">
+                <div className="detectHeading">
+                  <h3>Blocked Users</h3>
+                </div>
+                <div className="info">
+                  <ul className="eachListOne">
+                    {detectionData
+                      .filter((detection) => detection.confidenceScore >= "80%")
+                      .map((detection) => (
+                        <li key={detection._id} className="eachList">
+                          <p>
+                            <strong>User:</strong> {detection.getUserID}
                           </p>
-                          {text.analysis.length === 0
-                            ? "This text does not meet any threat category"
-                            : text.analysis.map(
-                                (analysisItem, analysisIndex) => (
-                                  <ul key={analysisIndex} className="category">
-                                    <li>{analysisItem.label}</li>
-                                  </ul>
-                                )
-                              )}
-                        </ul>
-                      </div>
-
-                      <div className="buttonList">
-                        <button
-                          className="editButton"
-                          onClick={() => {
-                            handleTextEdit(text);
-                          }}
-                        >
-                          <MdEditSquare />
-                        </button>
-                        <button
-                          className="deleteButton"
-                          onClick={() => {
-                            handleDeleteText(text._id);
-                          }}
-                        >
-                          <MdDeleteForever />
-                        </button>
-                      </div>
-                    </div>
-                  </ol>
-                ) : null;
-              })}
-            </div>
-          </div>
-
-          <div className="textAnalysis">
-            <div className="loghead">
-              {" "}
-              <h1 className="logHeading">Review Users</h1>
-            </div>
-
-            <div className="textDetection">
-              {textAnalysis.map((text, index) => {
-                const date = new Date(Date.parse(text.timestamp));
-                const formattedDate = date.toUTCString();
-
-                return text.analysis.length === 0 ? (
-                  <ol className="orderList" key={text._id || index}>
-                    <div className="reviewList">
-                      <div className="listOL">
-                        <li>
-                          {<strong>Detected User: </strong>}
-                          {text.getUserID}
-                        </li>
-                        <li className="textWrap">
-                          {<strong>Detected Item: </strong>}
-                          {text.textAnalysed}
-                        </li>
-                        <li>
-                          {<strong>Date/Time: </strong>}
-                          {formattedDate}
-                        </li>
-
-                        <ul className="paddingZero">
-                          <p className="headingCategory">
-                            {<strong>Detected Category: </strong>}
+                          <p>
+                            <strong>Item Detected:</strong>{" "}
+                            {detection.itemDetected}
                           </p>
-                          {text.analysis.length === 0
-                            ? "This text does not meet any threat category"
-                            : text.analysis.map(
-                                (analysisItem, analysisIndex) => (
-                                  <ul key={analysisIndex} className="category">
-                                    <li>{analysisItem.label}</li>
-                                  </ul>
-                                )
-                              )}
-                        </ul>
-                      </div>
-
-                      <div className="buttonList">
-                        <button
-                          className="editButton"
-                          onClick={() => {
-                            handleTextEdit(text);
-                          }}
-                        >
-                          <MdEditSquare />
-                        </button>
-                        <button
-                          className="deleteButton"
-                          onClick={() => {
-                            handleDeleteText(text._id);
-                          }}
-                        >
-                          <MdDeleteForever />
-                        </button>
-                      </div>
-                    </div>
-                  </ol>
-                ) : null;
-              })}
+                          <p>
+                            <strong>Confidence:</strong>
+                            {detection.confidenceScore}
+                          </p>
+                          <div className="buttton">
+                            <button
+                              className="buttonLog"
+                              onClick={() => handleEdit(detection)}
+                            >
+                              <FaEdit />
+                            </button>
+                            <button
+                              className="buttonLog"
+                              onClick={() => handleDelete(detection._id)}
+                            >
+                              <MdDeleteForever />
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="reviewDetection">
+                <div className="detectHeading">
+                  <h3>Review Users</h3>
+                </div>
+                <div className="info">
+                  <ul className="eachListOne">
+                    {detectionData
+                      .filter((detection) => detection.confidenceScore < "80%")
+                      .map((detection) => (
+                        <li key={detection._id} className="eachList">
+                          <p>
+                            <strong>User:</strong> {detection.getUserID}
+                          </p>
+                          <p>
+                            <strong>Item Detected:</strong>{" "}
+                            {detection.itemDetected}
+                          </p>
+                          <p>
+                            <strong>Confidence: </strong>
+                            {detection.confidenceScore}
+                          </p>
+                          <div className="buttton">
+                            <button
+                              className="buttonLog"
+                              onClick={() => handleEdit(detection)}
+                            >
+                              <FaEdit />
+                            </button>
+                            <button
+                              className="buttonLog"
+                              onClick={() => handleDelete(detection._id)}
+                            >
+                              <MdDeleteForever />
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
 
-          <div
-            className="popup"
-            style={{ display: textAnalysisEdit ? "flex" : "none" }}
-          >
-            <div className="popup-content">
-              {textAnalysisEdit && textAnalysisEditing ? (
-                <form onSubmit={handleSubmitText}>
-                  <label htmlFor="">Edit Detected User</label>
+          {selectedSection === "textAnalysis" && (
+            <div className="detection">
+              <div className="reviewDetection">
+                <div className="detectHeading">
+                  <h3>Blocked Text</h3>
+                </div>
+                <div className="info">
+                  <ul className="eachListOne">
+                    {textAnalysis
+                      .filter((text) => text.analysis.length >= 1)
+                      .map((text) => (
+                        <li key={text._id} className="eachList">
+                          <p>User: {text.getUserID}</p>
+                          <p>Text: {text.textAnalysed}</p>
+                          <p>
+                            Category:{" "}
+                            {text.analysis.map((a) => a.label).join(", ")}
+                          </p>
+                          <div className="buttton">
+                            <button
+                              className="buttonLog"
+                              onClick={() => handleTextEdit(text)}
+                            >
+                              <FaEdit />
+                            </button>
+                            <button
+                              className="buttonLog"
+                              onClick={() => handleDeleteText(text._id)}
+                            >
+                              <MdDeleteForever />
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="reviewDetection">
+                <div className="detectHeading">
+                  <h3>Review Text</h3>
+                </div>
+                <div className="info">
+                  <ul className="eachListOne">
+                    {textAnalysis
+                      .filter((text) => text.analysis.length === 0)
+                      .map((text) => (
+                        <li key={text._id} className="eachList">
+                          <p>User: {text.getUserID}</p>
+                          <p>Text: {text.textAnalysed}</p>
+                          <p>Category: None</p>
+                          <div className="buttton">
+                            <button
+                              className="buttonLog"
+                              onClick={() => handleTextEdit(text)}
+                            >
+                              <FaEdit />
+                            </button>
+                            <button
+                              className="buttonLog"
+                              onClick={() => handleDeleteText(text._id)}
+                            >
+                              <MdDeleteForever />
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {selectedSection === "userManagement" && (
+            <div>
+              <h1>Users</h1>
+              <ul>
+                {user.map((users) => (
+                  <li key={users._id}>
+                    <li>{users.username}</li>
+                    <li>{users._id}</li>
+                    {users.isBlocked ? (
+                      <button onClick={() => handleUnblockUser(users._id)}>
+                        Unblock
+                      </button>
+                    ) : (
+                      <button onClick={() => handleBlockUser(users._id)}>
+                        Block
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Detection pop up*/}
+      <div>
+        <div className="popup" style={{ display: editMode ? "flex" : "none" }}>
+          <div className="popup-content">
+            {editMode && editing ? (
+              <div>
+                <form onSubmit={handleSubmit}>
+                  <label htmlFor="">Edit Detected Item:</label>
                   <input
                     type="text"
-                    value={textAnalysisEditing.textAnalysed}
+                    value={editing.itemDetected}
                     onChange={(e) =>
-                      setTextAnalysisEditing({
-                        ...textAnalysisEditing,
-                        textAnalysed: e.target.value,
+                      setEditing({ ...editing, itemDetected: e.target.value })
+                    }
+                  />
+                  <br />
+                  <label htmlFor="">Edit Confidence Score:</label>
+                  <input
+                    type="text"
+                    value={editing.confidenceScore}
+                    onChange={(e) =>
+                      setEditing({
+                        ...editing,
+                        confidenceScore: e.target.value,
                       })
                     }
                   />
+                  <br />
                   <input type="submit" />
                   <button
                     onClick={() => {
-                      setTextAnalysisEdit(false);
+                      setEditMode(false);
                     }}
                   >
                     Close
                   </button>
                 </form>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+
+      {/* Detection pop up*/}
+      <div>
+        <div
+          className="popup"
+          style={{ display: textAnalysisEdit ? "flex" : "none" }}
+        >
+          <div className="popup-content">
+            {textAnalysisEdit && textAnalysisEditing ? (
+              <form onSubmit={handleSubmitText}>
+                <label htmlFor="">Edit Detected User</label>
+                <input
+                  type="text"
+                  value={textAnalysisEditing.textAnalysed}
+                  onChange={(e) =>
+                    setTextAnalysisEditing({
+                      ...textAnalysisEditing,
+                      textAnalysed: e.target.value,
+                    })
+                  }
+                />
+                <input type="submit" />
+                <button
+                  onClick={() => {
+                    setTextAnalysisEdit(false);
+                  }}
+                >
+                  Close
+                </button>
+              </form>
+            ) : null}
           </div>
         </div>
       </div>

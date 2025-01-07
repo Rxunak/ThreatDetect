@@ -6,6 +6,7 @@ import Camera from "../components/Camera";
 import chat from "../assets/deltabackground.jpg";
 import { FaCamera } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
+import { IoMdCloseCircle } from "react-icons/io";
 
 const TextAnalysis = ({ socket, username, room }) => {
   const [inputValue, setInputValue] = useState("");
@@ -93,6 +94,19 @@ const TextAnalysis = ({ socket, username, room }) => {
 
       const resData = await response.json();
       console.log("Backend Response", resData);
+
+      if (resData.isBlocked) {
+        alert("You have been blocked due to a violation");
+
+        localStorage.setItem(
+          "auth",
+          JSON.stringify({
+            ...getUserID,
+            isBlocked: true,
+          })
+        );
+        window.location.href = "/block";
+      }
     } catch (error) {
       console.log("Error while sending data to the backend", error);
     }
@@ -166,7 +180,7 @@ const TextAnalysis = ({ socket, username, room }) => {
         <div className="modalOverlay">
           <div className="modalContent">
             <button className="closeButton" onClick={CloseCamera}>
-              Close Camera
+              <IoMdCloseCircle/>
             </button>
             <Camera />
           </div>

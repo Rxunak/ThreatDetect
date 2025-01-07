@@ -91,24 +91,3 @@ export const deleteDetections = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-export const unblockUser = async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-    const user = await User.findByIdAndUpdate(
-      mongoose.Types.ObjectId(userId),
-      { isBlocked: false },
-      { new: true } 
-    );
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.status(200).json({ message: "User unblocked successfully", user });
-  } catch (error) {
-    console.error("Error unblocking user:", error);
-    res.status(500).json({ message: error.message });
-  }
-};

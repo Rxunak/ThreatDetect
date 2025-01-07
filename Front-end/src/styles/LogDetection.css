@@ -1,147 +1,15 @@
-.mainContent{
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  margin-top: 5rem;
-  height: auto; 
-}
-
-.blockedUsers{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  padding: 1rem;
-  width: auto;
-  height: auto;
-}
-
-.category{
-  padding: 0%;
-}
-
-.headingCategory{
-  padding: 0%;
-  margin-bottom: 0%;
-
-}
-
-.paddingZero{
-  display: flex;
-  flex-direction: column;
-  padding: 0%;
-}
-
-.logHeading{
-  margin: 0%;
-}
-
-.loghead{
-  display: flex;
-  justify-content: center;
-}
-
-.mainListComp{
-  display: flex;
-  justify-content: space-evenly;
-  gap: 1.5rem;
-}
-
-.listOL{
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.textWrap{
-  word-wrap: break-word; 
-  white-space: normal;   
-  overflow-wrap: anywhere;
-}
-
-.buttonList{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
-}
-
-.editButton{
-  border: none;
-  font-size: 1.5rem;
-}
-
-.deleteButton{
-  border: none;
-  font-size: 1.5rem;
-}
-
-.orderList{
-  border-radius: 1rem;
-  background-color: antiquewhite;
-  padding: 1rem;
-  margin-left: 1rem;
-  margin-right: 1rem;
-}
-
-.review{
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  width: 500px;
-  height: auto;
-}
-
-.reviewList{
-  display: flex;
-  justify-content: space-evenly;
-  gap: 1.5rem;
-}
-
-.reviewDetection{
-  height: auto;
-  width: 500px;
-  overflow: scroll;
-}
-
-.detectionOne{
-  padding: 1rem;
-  height: auto;
-  width: 500px;
-  overflow: scroll;
-}
-
-.textAnalysis{
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  width: 500px;
-  height: auto;
-}
-
-.textAnalysisBlocked{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-}
-
-.textDetection{
-  height: auto;
-  overflow: scroll;
-}
-
 .popup {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); 
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  display: none; 
+  display: none;
 }
 
 .popup-content {
@@ -153,9 +21,227 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.headingtext{
+.headingtext {
   display: flex;
   justify-content: center;
 }
 
+.sidebarMain {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  height: auto;
+  width: 100%;
+  margin-top: 4.7rem;
+}
 
+.sidebar {
+  width: 20rem;
+  overflow: scroll;
+  background-color: #17202a;
+}
+
+.content-area {
+  width: 100%;
+  background-color: whitesmoke;
+}
+
+.detection {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.textMain {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.textBlocked {
+  overflow: scroll;
+  height: 60rem;
+  width: 30rem;
+}
+
+.textReview {
+  overflow: scroll;
+  height: 60rem;
+  width: 30rem;
+}
+
+.tabs {
+  height: 20rem;
+  padding: 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.active {
+  background-color: whitesmoke;
+}
+
+.sidebar-bar {
+  height: 3rem;
+  border-radius: 1rem;
+  background-color: #5dade2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bolder;
+}
+
+.sidebar-bar:hover {
+  cursor: pointer;
+  background-color: white;
+  color: #17202a;
+}
+
+.logPageHome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem;
+  height: 25rem;
+  border-radius: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40rem;
+  margin-top: 1rem;
+}
+
+.glance {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-top: 5rem;
+  width: 75rem;
+  height: 7rem;
+}
+
+.glanceTab {
+  background-color: #5dade2;
+  border-radius: 100rem;
+  width: 7rem;
+  height: 7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.glanceTabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  height: 2rem;
+  width: 3rem;
+  font-size: 2rem;
+  font-weight: bolder;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.overview {
+  background-color: #5dade2;
+  height: 3rem;
+  width: 30rem;
+  border-radius: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bolder;
+  margin: 0%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.blockedDetec {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 20rem;
+}
+
+.textTab {
+  font-size: larger;
+  font-weight: bolder;
+}
+
+.logPageHomeMain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 45rem;
+}
+
+.detection {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 5rem;
+  padding: 1rem;
+}
+
+.blockedDetection {
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  width: 20rem;
+  height: 35rem;
+  border-radius: 2rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.reviewDetection {
+  overflow: scroll;
+  height: 36rem;
+  width: 20rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 2rem;
+}
+
+.detectHeading {
+  display: flex;
+  justify-content: center;
+  background-color: #d3e9f7;
+}
+
+.info {
+  background-color: #d3e9f7;
+}
+
+.eachList {
+  padding-bottom: 1rem;
+  border-bottom: 1px dotted black;
+}
+
+.eachListOne {
+  padding: 1rem;
+  margin: 0%;
+}
+
+.buttton {
+  display: flex;
+  gap: 2rem;
+}
+
+.buttonLog {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #5dade2;
+}
+
+.buttonLog:hover {
+  color: black;
+  cursor: pointer;
+}

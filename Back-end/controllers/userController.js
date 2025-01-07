@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
+import mongoose from "mongoose";
 
 export const registerUser = async (req, res) => {
   const { username, email, password, inviteCode } = req.body; // Assume inviteCode is provided if needed
@@ -50,13 +51,73 @@ export const loginUser = async (req, res) => {
     }
 
     // Send role along with login response
-    res
-      .status(200)
-      .json({ message: "Login successful", userId: user._id, role: user.role, isBlocked: user.isBlocked });
+    res.status(200).json({
+      message: "Login successful",
+      userId: user._id,
+      role: user.role,
+      isBlocked: user.isBlocked,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 };
 
+export const getUsersId = async (req, res) => {
+  try {
+    const user = await User.find();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
+export const blockUser = async (req, res) => {
+  const { userId } = req.params;
+  console.log("User ID:", req.params.userId);
 
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { isBlocked: true },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User blocked successfully", user });
+  } catch (error) {
+    console.error("Error while blocking user:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const unblockUser = async (req, res) => {
+  const { userId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { isBlocked: false },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User unblocked successfully", user });
+  } catch (error) {
+    console.error("Error unblocking user:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
