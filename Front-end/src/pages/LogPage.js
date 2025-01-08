@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import "../styles/LogDetection.css";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
+import { FaRegSmile } from "react-icons/fa";
 
 const LogPage = () => {
   const [detectionData, setDetectionData] = useState([]);
@@ -172,12 +173,11 @@ const LogPage = () => {
       );
 
       if (response.ok) {
-        console.log("Before", textAnalysis);
         setTextAnalysis((prevAnalysis) => {
           const updatedAnalysis = prevAnalysis.filter(
             (textAnalyse) => textAnalyse._id !== _id
           );
-          console.log("After", textAnalysis);
+
           return [...updatedAnalysis];
         });
       } else {
@@ -238,6 +238,27 @@ const LogPage = () => {
     } catch (error) {
       console.log("Error blocking user:", error);
       alert("An error occurred while blocking the user");
+    }
+  };
+
+  const deleteUser = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5001/api/users/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setUser((prevUser) => {
+          const updatedUser = prevUser.filter((users) => users._id !== id);
+
+          return [...updatedUser];
+        });
+      } else {
+        const data = await response.json();
+        alert(data.message || "Failed to delete the detection");
+      }
+    } catch (error) {
+      alert("An error occurred: " + error.message);
     }
   };
 
@@ -365,37 +386,49 @@ const LogPage = () => {
                 </div>
                 <div className="info">
                   <ul className="eachListOne">
-                    {detectionData
-                      .filter((detection) => detection.confidenceScore >= "80%")
-                      .map((detection) => (
-                        <li key={detection._id} className="eachList">
-                          <p>
-                            <strong>User:</strong> {detection.getUserID}
-                          </p>
-                          <p>
-                            <strong>Item Detected:</strong>{" "}
-                            {detection.itemDetected}
-                          </p>
-                          <p>
-                            <strong>Confidence:</strong>
-                            {detection.confidenceScore}
-                          </p>
-                          <div className="buttton">
-                            <button
-                              className="buttonLog"
-                              onClick={() => handleEdit(detection)}
-                            >
-                              <FaEdit />
-                            </button>
-                            <button
-                              className="buttonLog"
-                              onClick={() => handleDelete(detection._id)}
-                            >
-                              <MdDeleteForever />
-                            </button>
-                          </div>
-                        </li>
-                      ))}
+                    {detectionData.filter(
+                      (detection) => detection.confidenceScore >= "80%"
+                    ).length === 0 ? (
+                      <div className="noData">
+                        <h2>No Blocked Users </h2>
+                        {<FaRegSmile />}
+                      </div>
+                    ) : (
+                      detectionData
+
+                        .filter(
+                          (detection) => detection.confidenceScore >= "80%"
+                        )
+                        .map((detection) => (
+                          <li key={detection._id} className="eachList">
+                            <p>
+                              <strong>User:</strong> {detection.getUserID}
+                            </p>
+                            <p>
+                              <strong>Item Detected:</strong>{" "}
+                              {detection.itemDetected}
+                            </p>
+                            <p>
+                              <strong>Confidence:</strong>
+                              {detection.confidenceScore}
+                            </p>
+                            <div className="buttton">
+                              <button
+                                className="buttonLog"
+                                onClick={() => handleEdit(detection)}
+                              >
+                                <FaEdit />
+                              </button>
+                              <button
+                                className="buttonLog"
+                                onClick={() => handleDelete(detection._id)}
+                              >
+                                <MdDeleteForever />
+                              </button>
+                            </div>
+                          </li>
+                        ))
+                    )}
                   </ul>
                 </div>
               </div>
@@ -405,37 +438,48 @@ const LogPage = () => {
                 </div>
                 <div className="info">
                   <ul className="eachListOne">
-                    {detectionData
-                      .filter((detection) => detection.confidenceScore < "80%")
-                      .map((detection) => (
-                        <li key={detection._id} className="eachList">
-                          <p>
-                            <strong>User:</strong> {detection.getUserID}
-                          </p>
-                          <p>
-                            <strong>Item Detected:</strong>{" "}
-                            {detection.itemDetected}
-                          </p>
-                          <p>
-                            <strong>Confidence: </strong>
-                            {detection.confidenceScore}
-                          </p>
-                          <div className="buttton">
-                            <button
-                              className="buttonLog"
-                              onClick={() => handleEdit(detection)}
-                            >
-                              <FaEdit />
-                            </button>
-                            <button
-                              className="buttonLog"
-                              onClick={() => handleDelete(detection._id)}
-                            >
-                              <MdDeleteForever />
-                            </button>
-                          </div>
-                        </li>
-                      ))}
+                    {detectionData.filter(
+                      (detection) => detection.confidenceScore < "80%"
+                    ).length === 0 ? (
+                      <div className="noData">
+                        <h2>Nothing to Review </h2>
+                        {<FaRegSmile />}
+                      </div>
+                    ) : (
+                      detectionData
+                        .filter(
+                          (detection) => detection.confidenceScore < "80%"
+                        )
+                        .map((detection) => (
+                          <li key={detection._id} className="eachList">
+                            <p>
+                              <strong>User:</strong> {detection.getUserID}
+                            </p>
+                            <p>
+                              <strong>Item Detected:</strong>{" "}
+                              {detection.itemDetected}
+                            </p>
+                            <p>
+                              <strong>Confidence: </strong>
+                              {detection.confidenceScore}
+                            </p>
+                            <div className="buttton">
+                              <button
+                                className="buttonLog"
+                                onClick={() => handleEdit(detection)}
+                              >
+                                <FaEdit />
+                              </button>
+                              <button
+                                className="buttonLog"
+                                onClick={() => handleDelete(detection._id)}
+                              >
+                                <MdDeleteForever />
+                              </button>
+                            </div>
+                          </li>
+                        ))
+                    )}
                   </ul>
                 </div>
               </div>
@@ -450,32 +494,40 @@ const LogPage = () => {
                 </div>
                 <div className="info">
                   <ul className="eachListOne">
-                    {textAnalysis
-                      .filter((text) => text.analysis.length >= 1)
-                      .map((text) => (
-                        <li key={text._id} className="eachList">
-                          <p>User: {text.getUserID}</p>
-                          <p>Text: {text.textAnalysed}</p>
-                          <p>
-                            Category:{" "}
-                            {text.analysis.map((a) => a.label).join(", ")}
-                          </p>
-                          <div className="buttton">
-                            <button
-                              className="buttonLog"
-                              onClick={() => handleTextEdit(text)}
-                            >
-                              <FaEdit />
-                            </button>
-                            <button
-                              className="buttonLog"
-                              onClick={() => handleDeleteText(text._id)}
-                            >
-                              <MdDeleteForever />
-                            </button>
-                          </div>
-                        </li>
-                      ))}
+                    {textAnalysis.filter((text) => text.analysis.length >= 1)
+                      .length === 0 ? (
+                      <div className="noData">
+                        <h2>No Blocked Users </h2>
+                        {<FaRegSmile />}
+                      </div>
+                    ) : (
+                      textAnalysis
+                        .filter((text) => text.analysis.length >= 1)
+                        .map((text) => (
+                          <li key={text._id} className="eachList">
+                            <p>User: {text.getUserID}</p>
+                            <p>Text: {text.textAnalysed}</p>
+                            <p>
+                              Category:{" "}
+                              {text.analysis.map((a) => a.label).join(", ")}
+                            </p>
+                            <div className="buttton">
+                              <button
+                                className="buttonLog"
+                                onClick={() => handleTextEdit(text)}
+                              >
+                                <FaEdit />
+                              </button>
+                              <button
+                                className="buttonLog"
+                                onClick={() => handleDeleteText(text._id)}
+                              >
+                                <MdDeleteForever />
+                              </button>
+                            </div>
+                          </li>
+                        ))
+                    )}
                   </ul>
                 </div>
               </div>
@@ -485,29 +537,37 @@ const LogPage = () => {
                 </div>
                 <div className="info">
                   <ul className="eachListOne">
-                    {textAnalysis
-                      .filter((text) => text.analysis.length === 0)
-                      .map((text) => (
-                        <li key={text._id} className="eachList">
-                          <p>User: {text.getUserID}</p>
-                          <p>Text: {text.textAnalysed}</p>
-                          <p>Category: None</p>
-                          <div className="buttton">
-                            <button
-                              className="buttonLog"
-                              onClick={() => handleTextEdit(text)}
-                            >
-                              <FaEdit />
-                            </button>
-                            <button
-                              className="buttonLog"
-                              onClick={() => handleDeleteText(text._id)}
-                            >
-                              <MdDeleteForever />
-                            </button>
-                          </div>
-                        </li>
-                      ))}
+                    {textAnalysis.filter((text) => text.analysis.length === 0)
+                      .length === 0 ? (
+                      <div className="noData">
+                        <h2>No Blocked Users </h2>
+                        {<FaRegSmile />}
+                      </div>
+                    ) : (
+                      textAnalysis
+                        .filter((text) => text.analysis.length === 0)
+                        .map((text) => (
+                          <li key={text._id} className="eachList">
+                            <p>User: {text.getUserID}</p>
+                            <p>Text: {text.textAnalysed}</p>
+                            <p>Category: None</p>
+                            <div className="buttton">
+                              <button
+                                className="buttonLog"
+                                onClick={() => handleTextEdit(text)}
+                              >
+                                <FaEdit />
+                              </button>
+                              <button
+                                className="buttonLog"
+                                onClick={() => handleDeleteText(text._id)}
+                              >
+                                <MdDeleteForever />
+                              </button>
+                            </div>
+                          </li>
+                        ))
+                    )}
                   </ul>
                 </div>
               </div>
@@ -515,25 +575,56 @@ const LogPage = () => {
           )}
 
           {selectedSection === "userManagement" && (
-            <div>
-              <h1>Users</h1>
-              <ul>
-                {user.map((users) => (
-                  <li key={users._id}>
-                    <li>{users.username}</li>
-                    <li>{users._id}</li>
-                    {users.isBlocked ? (
-                      <button onClick={() => handleUnblockUser(users._id)}>
-                        Unblock
-                      </button>
-                    ) : (
-                      <button onClick={() => handleBlockUser(users._id)}>
-                        Block
-                      </button>
-                    )}
-                  </li>
-                ))}
-              </ul>
+            <div className="userMain">
+              <div className="userDetection">
+                <div className="detectHeading">
+                  <h1>Users</h1>
+                </div>
+                <div className="userInfo">
+                  <div></div>
+                  <ul className="userEachListOne">
+                    {user.map((users) => (
+                      <li key={users._id} className="userEachList">
+                        <li>
+                          <strong>Name: </strong>
+                          {users.username}
+                        </li>
+                        <li>
+                          <strong>User ID: </strong>
+                          {users._id}
+                        </li>
+                        <div className="userButtons">
+                          <div>
+                            {users.isBlocked ? (
+                              <button
+                                className="userButton"
+                                onClick={() => handleUnblockUser(users._id)}
+                              >
+                                Unblock
+                              </button>
+                            ) : (
+                              <button
+                                className="userButton"
+                                onClick={() => handleBlockUser(users._id)}
+                              >
+                                Block
+                              </button>
+                            )}
+                          </div>
+                          <div>
+                            <button
+                              className="userButton"
+                              onClick={() => deleteUser(users._id)}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           )}
         </div>

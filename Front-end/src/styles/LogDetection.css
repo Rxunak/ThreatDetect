@@ -30,12 +30,15 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  height: auto;
+  height: 97vh;
   width: 100%;
   margin-top: 4.7rem;
 }
 
 .sidebar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 20rem;
   overflow: scroll;
   background-color: #17202a;
@@ -83,6 +86,7 @@
 
 .sidebar-bar {
   height: 3rem;
+  width: 15rem;
   border-radius: 1rem;
   background-color: #5dade2;
   display: flex;
@@ -197,8 +201,8 @@
   overflow: scroll;
   width: 20rem;
   height: 35rem;
-  border-radius: 2rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  background-color: #d3e9f7;
 }
 
 .reviewDetection {
@@ -206,7 +210,7 @@
   height: 36rem;
   width: 20rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  border-radius: 2rem;
+  background-color: #d3e9f7;
 }
 
 .detectHeading {
@@ -244,4 +248,64 @@
 .buttonLog:hover {
   color: black;
   cursor: pointer;
+}
+
+.userDetection {
+  overflow: scroll;
+  height: 36rem;
+  width: 20rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  background-color: #d3e9f7;
+}
+
+.userInfo {
+  background-color: #d3e9f7;
+}
+
+.userEachListOne {
+  padding: 1rem;
+  margin: 0%;
+}
+
+.userEachList {
+  padding-bottom: 1rem;
+  border-bottom: 1px dotted black;
+}
+
+.userMain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50rem;
+  padding: 1rem;
+}
+
+.userButton {
+  background-color: #5dade2;
+  color: white;
+  height: 1.5rem;
+  border-radius: 1rem;
+  font-weight: bolder;
+  border: none;
+}
+
+.userButton:hover {
+  color: black;
+  cursor: pointer;
+}
+
+.noData{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 30rem;
+  color: #5dade2;
+}
+
+.userButtons{
+  display: flex;
+  height: 3rem;
+  align-items: center;
+  gap: 1rem;
 }
