@@ -16,7 +16,7 @@
   height: 700px;
   width: 400px;
   border-radius: 20px;
-  background-color: rgb(133, 135, 135);
+  background-color: #17202a;
   
 }
 
@@ -28,7 +28,7 @@
 }
 
 .chatHead {
-  border: 2px black solid;
+  border: 2px rgb(242, 237, 237) solid;
   margin-top: 2px;
   height: 10px;
   width: 60px;
@@ -93,10 +93,19 @@
   height: 30px;
   display: flex;
   align-items: center;
+  
 }
 
 .cameraIcon{
-  font-size: 20px;
+  border: none;
+  background: none;
+  font-size: 23px;
+  padding-top: 0.3rem;
+}
+
+.cameraIcon:hover{
+  cursor: pointer;
+  color: rgb(86, 84, 84);
 }
 
 .send{
@@ -105,7 +114,15 @@
   align-items: center;
 }
 .sendIcon{
-  font-size: 20px;
+  border: none;
+  background: none;
+  font-size: 23px;
+  padding-top: 0.3rem;
+}
+
+.sendIcon:hover{
+  cursor: pointer;
+  color: rgb(86, 84, 84);
 }
 
 

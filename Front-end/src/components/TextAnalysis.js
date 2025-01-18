@@ -8,15 +8,11 @@ import { FaCamera } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import { IoMdCloseCircle } from "react-icons/io";
 
-const TextAnalysis = ({ socket, username, room }) => {
+const TextAnalysis = () => {
   const [inputValue, setInputValue] = useState("");
-
   const [chatHistory, setChatHistory] = useState([]);
-
   const [model, setModel] = useState(null);
-
   const [analysisResult, setAnalysisResult] = useState([]);
-
   const [turnCameraOn, setTurnCameraOn] = useState(false);
 
   useEffect(() => {
@@ -33,26 +29,41 @@ const TextAnalysis = ({ socket, username, room }) => {
     setInputValue(e.target.value);
   };
 
+  const fallbackText = (text) => {
+    const toxicText = [
+      "i hate you",
+      "watch your back",
+      "you are going to regret this",
+    ];
+    const isTextToxic = toxicText.some((phrase) =>
+      text.toLowerCase().includes(phrase)
+    );
+    return isTextToxic;
+  };
+
   const textAnalyse = async () => {
     if (model && inputValue) {
       const predictions = await model.classify([inputValue]);
-      //saving the predictions
+      const isFallbacktext = fallbackText(inputValue);
+
+      if (isFallbacktext) {
+        predictions.push({
+          label: "toxicText",
+          results: [{ match: true }],
+        });
+      }
+
       setAnalysisResult(predictions);
-      //sennding the parameters for backend
       sendAnalysedData(inputValue, predictions);
-      //saving the inputvalue into chatArray state
       setChatHistory([
         ...chatHistory,
         { messageInput: inputValue, analysis: predictions },
       ]);
-      //setting input value state to empty
       setInputValue("");
     } else {
       console.log("Model is not loaded or input is empty!");
     }
   };
-
-  //BACKEND SECTION
 
   const sendAnalysedData = async (userText, analysisResult) => {
     const filteredResults = analysisResult
@@ -77,8 +88,6 @@ const TextAnalysis = ({ socket, username, room }) => {
       analysis: filteredResults,
     };
 
-    console.log(backendData);
-
     try {
       const response = await fetch("http://localhost:5001/api/analysis", {
         method: "POST",
@@ -93,7 +102,6 @@ const TextAnalysis = ({ socket, username, room }) => {
       }
 
       const resData = await response.json();
-      console.log("Backend Response", resData);
 
       if (resData.isBlocked) {
         alert("You have been blocked due to a violation");
@@ -180,7 +188,7 @@ const TextAnalysis = ({ socket, username, room }) => {
         <div className="modalOverlay">
           <div className="modalContent">
             <button className="closeButton" onClick={CloseCamera}>
-              <IoMdCloseCircle/>
+              <IoMdCloseCircle />
             </button>
             <Camera />
           </div>
