@@ -3,7 +3,7 @@ import User from "../models/User.js";
 import mongoose from "mongoose";
 
 export const registerUser = async (req, res) => {
-  const { username, email, password, inviteCode } = req.body; // Assume inviteCode is provided if needed
+  const { username, email, password, inviteCode } = req.body; 
 
   try {
     const userExists = await User.findOne({ email });
@@ -14,7 +14,6 @@ export const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Set role based on invite code or other logic
     const role = inviteCode === "SPECIALADMINCODE" ? "admin" : "user";
 
     const newUser = new User({
@@ -50,7 +49,6 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // Send role along with login response
     res.status(200).json({
       message: "Login successful",
       userId: user._id,
