@@ -10,9 +10,9 @@ const Camera = () => {
 
   const [message, setMessage] = useState("");
   const [isDetecting, setIsDetecting] = useState(false);
-  const [item, setItem] = useState(""); 
+  const [item, setItem] = useState("");
   const [stream, setStream] = useState(null);
-  const [conScore, setConScore] = useState([])
+  const [conScore, setConScore] = useState([]);
 
   useEffect(() => {
     const loadModelAndDetect = async () => {
@@ -31,9 +31,7 @@ const Camera = () => {
       });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        //Once the metaData is loaded
         videoRef.current.onloadedmetadata = () => {
-          //We are setting up the canvasRef to the Video Ref dimentions
           canvasRef.current.width = videoRef.current.videoWidth;
           canvasRef.current.height = videoRef.current.videoHeight;
         };
@@ -44,7 +42,6 @@ const Camera = () => {
     }
   };
 
-  //Get enough data to run the model such like dimentions and load the model
   const getVideoListener = () => {
     videoRef.current.addEventListener("loadeddata", () => {
       if (modelRef.current) {
@@ -72,23 +69,19 @@ const Camera = () => {
 
   const detectObjects = async (model) => {
     if (videoRef.current && videoRef.current.readyState >= 2) {
-      //Detecting live feed using the model
       const predictions = await model.detect(videoRef.current);
-      //calling drawPredictions and passing in predictions
       drawPredictions(predictions);
+      confidenceScore(predictions);
 
-      confidenceScore(predictions)
-      
-      //Finding Specific detections
       const detected = predictions.some(
         (prediction) =>
-          prediction.class === "bottle" || prediction.class === "person"
+          prediction.class === "bottle" || prediction.class === "cell phone"
       );
 
       if (detected) {
         const detectedObject = predictions.find(
           (prediction) =>
-            prediction.class === "bottle" || prediction.class === "person"
+            prediction.class === "bottle" || prediction.class === "cell phone"
         ).class;
         setMessage(
           `${
@@ -100,18 +93,15 @@ const Camera = () => {
         setMessage("");
         setItem("");
       }
-      //This is where it is running it continiously
       requestAnimationFrame(() => detectObjects(model));
     }
   };
 
-  // draw object bounding boxes
   const drawPredictions = (predictions) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-    //Setting up drawing Req
     predictions.forEach((prediction) => {
       context.beginPath();
       context.rect(
@@ -120,33 +110,31 @@ const Camera = () => {
         prediction.bbox[2],
         prediction.bbox[3]
       );
+
       context.lineWidth = 5;
       context.strokeStyle = "red";
       context.fillRect = "yellow";
       context.stroke();
 
       const font = (context.font = prediction.class);
-      
       context.fillText(font, prediction.bbox[0], prediction.bbox[1]);
-      
-
     });
   };
 
   const confidenceScore = (predictions) => {
-    const getConf = predictions.find((confidence) => confidence.class === "person");
+    const getConf = predictions.find(
+      (confidence) => confidence.class === "cell phone" || confidence.class === "bottle"
+    );
     let finalconfidence = null;
-    if(getConf){
+    if (getConf) {
       finalconfidence = `${parseFloat(getConf.score * 100).toFixed(2)}%`;
     }
-    setConScore(finalconfidence)
-  }
+    setConScore(finalconfidence);
+  };
 
-  //BACKEND PART
 
   useEffect(() => {
     let intervalId;
-
     if (isDetecting) {
       intervalId = setInterval(() => {
         const getUser = localStorage.getItem("auth");
@@ -182,24 +170,18 @@ const Camera = () => {
             }
 
             const result = await response.json();
-            console.log("Detection sent:", result);
 
             if (result.isBlocked) {
               alert("You have been blocked due to a violation.");
-              // Update localStorage
               localStorage.setItem(
                 "auth",
                 JSON.stringify({
                   ...getUserID,
-                  isBlocked: true, // Set isBlocked to true
+                  isBlocked: true, 
                 })
               );
-  
-              // Redirect to the blocked page
               window.location.href = "/block";
             }
-
-            console.log(result)
           } catch (error) {
             console.error("Error:", error);
           }
@@ -208,7 +190,6 @@ const Camera = () => {
         sendDetectionData();
       }, 30);
     }
-
     return () => clearInterval(intervalId);
   }, [item, conScore, isDetecting]);
 
