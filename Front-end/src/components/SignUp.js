@@ -12,9 +12,7 @@ const Signup = () => {
   });
 
   const [errors, setErrors] = useState({});
-
   const [submitting, setSubmitting] = useState(false);
-
   const [signUpError, setSignUpError] = useState([]);
 
   const navigate = useNavigate();
@@ -67,13 +65,10 @@ const Signup = () => {
     const data = await response.json();
 
     if (response.ok) {
-      console.log("Signup successful:", data);
       setInputFields({ username: "", email: "", password: "" });
       setSubmitting(false);
-
       navigate("/login");
     } else {
-      console.log("Signup failed:", data);
       setSubmitting(false);
       setSignUpError(data.message);
     }
