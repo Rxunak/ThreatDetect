@@ -72,6 +72,7 @@ const Camera = () => {
       const predictions = await model.detect(videoRef.current);
       drawPredictions(predictions);
       confidenceScore(predictions);
+      // screenshot(predictions);
 
       const detected = predictions.some(
         (prediction) =>
@@ -99,6 +100,7 @@ const Camera = () => {
 
   const drawPredictions = (predictions) => {
     const canvas = canvasRef.current;
+    const video = videoRef.current;
     const context = canvas.getContext("2d");
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
@@ -110,7 +112,6 @@ const Camera = () => {
         prediction.bbox[2],
         prediction.bbox[3]
       );
-
       context.lineWidth = 5;
       context.strokeStyle = "red";
       context.fillRect = "yellow";
@@ -118,12 +119,25 @@ const Camera = () => {
 
       const font = (context.font = prediction.class);
       context.fillText(font, prediction.bbox[0], prediction.bbox[1]);
+
+      if (prediction.class === "bottle" || prediction.class === "cell phone") {
+        context.drawImage(
+          video,
+          prediction.bbox[0],
+          prediction.bbox[1],
+          prediction.bbox[2],
+          prediction.bbox[3]
+        );
+
+        const image = canvas.toDataURL("image/jpeg");
+      }
     });
   };
 
   const confidenceScore = (predictions) => {
     const getConf = predictions.find(
-      (confidence) => confidence.class === "cell phone" || confidence.class === "bottle"
+      (confidence) =>
+        confidence.class === "cell phone" || confidence.class === "bottle"
     );
     let finalconfidence = null;
     if (getConf) {
@@ -131,7 +145,6 @@ const Camera = () => {
     }
     setConScore(finalconfidence);
   };
-
 
   useEffect(() => {
     let intervalId;
@@ -177,7 +190,7 @@ const Camera = () => {
                 "auth",
                 JSON.stringify({
                   ...getUserID,
-                  isBlocked: true, 
+                  isBlocked: true,
                 })
               );
               window.location.href = "/block";
