@@ -1,8 +1,6 @@
-import { data, div } from "@tensorflow/tfjs";
 import "../styles/Login.css";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 const Login = () => {
   const [inputFields, setInputFields] = useState({
@@ -55,34 +53,27 @@ const Login = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(inputFields), // Sending the input fields (username, email, password) to the backend
+      body: JSON.stringify(inputFields),
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      console.log("login successful:", data);
-
       localStorage.setItem(
         "auth",
         JSON.stringify({
           isAuthenticated: true,
           userId: data.userId,
           role: data.role,
-          isBlocked: data.isBlocked
+          isBlocked: data.isBlocked,
         })
       );
       setInputFields({ email: "", password: "" });
       setSubmitting(false);
       navigate("/");
     } else {
-      console.log("Login has beenss failed:", data);
       setSubmitting(false);
       setLoginError(data.message);
-
-      console.log(loginError);
-
-      // navigate("/signup");
     }
   };
 
