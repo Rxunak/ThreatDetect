@@ -3,8 +3,6 @@ dotenv.config();
 
 import nodemailer from "nodemailer";
 
-console.log("SMTP User:", process.env.EMAIL_USERNAME);
-console.log("SMTP Password Loaded:", !!process.env.EMAIL_PASSWORD);
 
 const sendEmail = nodemailer.createTransport({
   host: "smtp.gmail.com",
