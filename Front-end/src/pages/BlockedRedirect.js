@@ -1,18 +1,17 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import image from "../assets/image copy.png";
 import "../styles/BlockedPage.css";
 import { MdContactSupport } from "react-icons/md";
 import { IoLogOutSharp } from "react-icons/io5";
 
 const BlockedRedirect = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem("auth");
-    
-        navigate("/login");
-      };
+  const handleLogout = () => {
+    localStorage.removeItem("auth");
+    navigate("/login");
+  };
   return (
     <div className="mainBlockPage">
       <div className="secondMainPage">
@@ -36,7 +35,9 @@ const BlockedRedirect = () => {
 
           <div className="blockPageButton">
             <button className="button1">
-              <a className="button2css" href="mailto:raunakuk2016@gmail.com"><MdContactSupport /></a>
+              <a className="button2css" href="mailto:raunakuk2016@gmail.com">
+                <MdContactSupport />
+              </a>
             </button>
 
             <button className="button2" onClick={handleLogout}>
