@@ -1,6 +1,7 @@
 import "../styles/Login.css";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 
 const Login = () => {
   const [inputFields, setInputFields] = useState({
@@ -70,7 +71,14 @@ const Login = () => {
       );
       setInputFields({ email: "", password: "" });
       setSubmitting(false);
-      navigate("/");
+
+      toast.success("Loggin Succesfull", {
+        position: "top-right",
+        autoClose: 500
+      })
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } else {
       setSubmitting(false);
       setLoginError(data.message);
@@ -136,7 +144,7 @@ const Login = () => {
                     {submitting ? "Submitting.." : "Submit"}
                   </button>
                 </div>
-
+                <ToastContainer/>
                 <div>
                   <div>
                     {loginError && loginError.length >= 1 ? (
