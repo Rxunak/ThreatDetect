@@ -82,6 +82,10 @@ const Login = () => {
     } else {
       setSubmitting(false);
       setLoginError(data.message);
+      toast.error("Login Failed!", {
+        position: "top-right",
+        autoClose: 1000
+      })
     }
   };
 
