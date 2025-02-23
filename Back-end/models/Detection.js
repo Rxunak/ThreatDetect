@@ -18,6 +18,11 @@ const detectionSchema = new mongoose.Schema({
     required: true,
   },
 
+  image: {
+    type: String,
+    required: true,
+  },
+
   timestamp: {
     type: Date,
     default: Date.now(),

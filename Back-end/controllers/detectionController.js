@@ -6,8 +6,8 @@ import User from "../models/User.js";
 
 export const saveDetection = async (req, res) => {
   try {
-    const { itemDetected, getUserID, confidenceScore } = req.body;
-    const newDetection = new Detection({ itemDetected, getUserID, confidenceScore});
+    const { itemDetected, getUserID, confidenceScore, image } = req.body;
+    const newDetection = new Detection({ itemDetected, getUserID, confidenceScore, image});
     await newDetection.save();
 
     await sendEmailAlert(

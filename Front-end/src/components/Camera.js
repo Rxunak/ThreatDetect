@@ -13,6 +13,7 @@ const Camera = () => {
   const [item, setItem] = useState("");
   const [stream, setStream] = useState(null);
   const [conScore, setConScore] = useState([]);
+  const [detectionImage, setDetectionImage] = useState("");
 
   useEffect(() => {
     const loadModelAndDetect = async () => {
@@ -54,9 +55,11 @@ const Camera = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
     }
+    console.log(stream.getTracks())
   };
 
   const handleDetection = async () => {
+    console.log("handle detection called")
     if (isDetecting) {
       stopRecording();
       setIsDetecting(false);
@@ -71,8 +74,7 @@ const Camera = () => {
     if (videoRef.current && videoRef.current.readyState >= 2) {
       const predictions = await model.detect(videoRef.current);
       drawPredictions(predictions);
-      confidenceScore(predictions);
-      // screenshot(predictions);
+      confidenceScore(predictions);  
 
       const detected = predictions.some(
         (prediction) =>
@@ -103,8 +105,9 @@ const Camera = () => {
     const video = videoRef.current;
     const context = canvas.getContext("2d");
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-
+    console.log(predictions)
     predictions.forEach((prediction) => {
+      
       context.beginPath();
       context.rect(
         prediction.bbox[0],
@@ -130,6 +133,7 @@ const Camera = () => {
         );
 
         const image = canvas.toDataURL("image/jpeg");
+        setDetectionImage(image);    
       }
     });
   };
@@ -137,7 +141,7 @@ const Camera = () => {
   const confidenceScore = (predictions) => {
     const getConf = predictions.find(
       (confidence) =>
-        confidence.class === "cell phone" || confidence.class === "bottle"
+        confidence.class === "bottle" || confidence.class === "cell phone"
     );
     let finalconfidence = null;
     if (getConf) {
@@ -148,63 +152,61 @@ const Camera = () => {
 
   useEffect(() => {
     let intervalId;
-    if (isDetecting) {
+    if (isDetecting && (item === "bottle" || item === "cell phone")) {  
       intervalId = setInterval(() => {
         const getUser = localStorage.getItem("auth");
         const getUserID = getUser ? JSON.parse(getUser) : null;
-
+  
         if (!getUserID || !getUserID.userId) {
-          console.log("User ID not found!");
+          console.log("User ID not found! Skipping send.");
           return;
         }
-
+  
         const sendDetectionData = async () => {
+          if (!item || !conScore) {
+            console.log("Skipping send due to missing item or confidence score.");
+            return;
+          }
           const detectionData = {
             getUserID: getUserID.userId,
             itemDetected: item,
             confidenceScore: conScore,
+            image: detectionImage,
             timestamp: new Date(),
           };
-
+  
           try {
-            const response = await fetch(
-              "http://localhost:5001/api/detections",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(detectionData),
-              }
-            );
-
+            const response = await fetch("http://localhost:5001/api/detections", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(detectionData),
+            });
+  
             if (!response.ok) {
               throw new Error("Failed to send data");
             }
-
+  
             const result = await response.json();
-
+            console.log("Detection Sent Successfully:", result);
+  
             if (result.isBlocked) {
               alert("You have been blocked due to a violation.");
               localStorage.setItem(
                 "auth",
-                JSON.stringify({
-                  ...getUserID,
-                  isBlocked: true,
-                })
+                JSON.stringify({ ...getUserID, isBlocked: true })
               );
               window.location.href = "/block";
             }
           } catch (error) {
-            console.error("Error:", error);
+            console.error("Error sending detection:", error);
           }
         };
-
+  
         sendDetectionData();
-      }, 30);
+      }, 3);
     }
     return () => clearInterval(intervalId);
-  }, [item, conScore, isDetecting]);
+  }, [item, conScore, isDetecting]); 
 
   return (
     <div className="cameraMainContainer">
@@ -218,6 +220,7 @@ const Camera = () => {
           <div>
             {message && (
               <div
+              className="detection-message"
                 style={{
                   top: 0,
                   left: 0,
