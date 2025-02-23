@@ -5,6 +5,7 @@ import "../styles/LogDetection.css";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { FaRegSmile } from "react-icons/fa";
+import { IoMdCloseCircle } from "react-icons/io";
 
 const LogPage = () => {
   const [detectionData, setDetectionData] = useState([]);
@@ -56,12 +57,7 @@ const LogPage = () => {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    console.log("thgus is user data", user);
-  });
-
   const handleDelete = async (id) => {
-    console.log("handle called with id", id);
     try {
       const response = await fetch(
         `http://localhost:5001/api/detections/${id}`,
@@ -145,7 +141,6 @@ const LogPage = () => {
 
       if (response.ok) {
         const updatedAnalysis = await response.json();
-        console.log("This is the new detection", updatedAnalysis);
         setTextAnalysis((prevAnalysis) =>
           prevAnalysis.map((textAnalyse) =>
             textAnalyse._id === updatedAnalysis._id
@@ -155,7 +150,7 @@ const LogPage = () => {
         );
         setTextAnalysisEdit(false);
       } else {
-        alert("not working");
+        console.log("not working");
       }
     } catch (error) {
       console.log(error);
@@ -182,10 +177,10 @@ const LogPage = () => {
         });
       } else {
         const data = await response.json();
-        alert(data.message || "Failed to delete the detection");
+        console.log(data.message || "Failed to delete the detection");
       }
     } catch (error) {
-      alert("An error occurred: " + error.message);
+      console.log("An error occurred: " + error.message);
     }
   };
 
@@ -237,7 +232,6 @@ const LogPage = () => {
       }
     } catch (error) {
       console.log("Error blocking user:", error);
-      alert("An error occurred while blocking the user");
     }
   };
 
@@ -255,10 +249,10 @@ const LogPage = () => {
         });
       } else {
         const data = await response.json();
-        alert(data.message || "Failed to delete the detection");
+        console.log(data.message || "Failed to delete the detection");
       }
     } catch (error) {
-      alert("An error occurred: " + error.message);
+      console.log("An error occurred: " + error.message);
     }
   };
 
@@ -401,30 +395,40 @@ const LogPage = () => {
                         )
                         .map((detection) => (
                           <li key={detection._id} className="eachList">
-                            <p>
-                              <strong>User:</strong> {detection.getUserID}
-                            </p>
-                            <p>
-                              <strong>Item Detected:</strong>{" "}
-                              {detection.itemDetected}
-                            </p>
-                            <p>
-                              <strong>Confidence:</strong>
-                              {detection.confidenceScore}
-                            </p>
-                            <div className="buttton">
-                              <button
-                                className="buttonLog"
-                                onClick={() => handleEdit(detection)}
-                              >
-                                <FaEdit />
-                              </button>
-                              <button
-                                className="buttonLog"
-                                onClick={() => handleDelete(detection._id)}
-                              >
-                                <MdDeleteForever />
-                              </button>
+                            <div className="detectionListMain">
+                              <div>
+                                <p>
+                                  <strong>User Id:</strong>{" "}
+                                  {detection.getUserID}
+                                </p>
+                                <p>
+                                  <strong>Detected Item:</strong>{" "}
+                                  {detection.itemDetected}
+                                </p>
+                                <p>
+                                  <strong>Confidence Score: </strong>
+                                  {detection.confidenceScore}
+                                </p>
+                                <img
+                                  src={detection.image}
+                                  alt=""
+                                  className="detectionText"
+                                />
+                              </div>
+                              <div className="buttton">
+                                <button
+                                  className="buttonLog"
+                                  onClick={() => handleEdit(detection)}
+                                >
+                                  <FaEdit />
+                                </button>
+                                <button
+                                  className="buttonLog"
+                                  onClick={() => handleDelete(detection._id)}
+                                >
+                                  <MdDeleteForever />
+                                </button>
+                              </div>
                             </div>
                           </li>
                         ))
@@ -452,30 +456,40 @@ const LogPage = () => {
                         )
                         .map((detection) => (
                           <li key={detection._id} className="eachList">
-                            <p>
-                              <strong>User:</strong> {detection.getUserID}
-                            </p>
-                            <p>
-                              <strong>Item Detected:</strong>{" "}
-                              {detection.itemDetected}
-                            </p>
-                            <p>
-                              <strong>Confidence: </strong>
-                              {detection.confidenceScore}
-                            </p>
-                            <div className="buttton">
-                              <button
-                                className="buttonLog"
-                                onClick={() => handleEdit(detection)}
-                              >
-                                <FaEdit />
-                              </button>
-                              <button
-                                className="buttonLog"
-                                onClick={() => handleDelete(detection._id)}
-                              >
-                                <MdDeleteForever />
-                              </button>
+                            <div className="detectionListMain">
+                              <div>
+                                <p>
+                                  <strong>User Id:</strong>{" "}
+                                  {detection.getUserID}
+                                </p>
+                                <p>
+                                  <strong>Detected Item:</strong>{" "}
+                                  {detection.itemDetected}
+                                </p>
+                                <p>
+                                  <strong>Confidence Score: </strong>
+                                  {detection.confidenceScore}
+                                </p>
+                                <img
+                                  src={detection.image}
+                                  alt=""
+                                  className="detectionText"
+                                />
+                              </div>
+                              <div className="buttton">
+                                <button
+                                  className="buttonLog"
+                                  onClick={() => handleEdit(detection)}
+                                >
+                                  <FaEdit />
+                                </button>
+                                <button
+                                  className="buttonLog"
+                                  onClick={() => handleDelete(detection._id)}
+                                >
+                                  <MdDeleteForever />
+                                </button>
+                              </div>
                             </div>
                           </li>
                         ))
@@ -505,25 +519,35 @@ const LogPage = () => {
                         .filter((text) => text.analysis.length >= 1)
                         .map((text) => (
                           <li key={text._id} className="eachList">
-                            <p>User: {text.getUserID}</p>
-                            <p>Text: {text.textAnalysed}</p>
-                            <p>
-                              Category:{" "}
-                              {text.analysis.map((a) => a.label).join(", ")}
-                            </p>
-                            <div className="buttton">
-                              <button
-                                className="buttonLog"
-                                onClick={() => handleTextEdit(text)}
-                              >
-                                <FaEdit />
-                              </button>
-                              <button
-                                className="buttonLog"
-                                onClick={() => handleDeleteText(text._id)}
-                              >
-                                <MdDeleteForever />
-                              </button>
+                            <div className="detectionListMain">
+                              <div>
+                                <p>
+                                  <strong>User Id: </strong> {text.getUserID}
+                                </p>
+                                <p>
+                                  <strong>Detected Text:</strong>{" "}
+                                  {text.textAnalysed}
+                                </p>
+                                <p>
+                                  <strong>Threat Category:</strong>{" "}
+                                  {text.analysis.map((a) => a.label).join(", ")}
+                                </p>
+                              </div>
+                              <div className="buttton">
+                                <button
+                                  className="buttonLog"
+                                  onClick={() => handleTextEdit(text)}
+                                >
+                                  <FaEdit />
+                                </button>
+                                <button
+                                  className="buttonLog"
+                                  onClick={() => handleDeleteText(text._id)}
+                                  onCl
+                                >
+                                  <MdDeleteForever />
+                                </button>
+                              </div>
                             </div>
                           </li>
                         ))
@@ -531,7 +555,7 @@ const LogPage = () => {
                   </ul>
                 </div>
               </div>
-              <div className="reviewDetection">
+              {/* <div className="reviewDetection">
                 <div className="detectHeading">
                   <h3>Review Text</h3>
                 </div>
@@ -548,29 +572,40 @@ const LogPage = () => {
                         .filter((text) => text.analysis.length === 0)
                         .map((text) => (
                           <li key={text._id} className="eachList">
-                            <p>User: {text.getUserID}</p>
-                            <p>Text: {text.textAnalysed}</p>
-                            <p>Category: None</p>
-                            <div className="buttton">
-                              <button
-                                className="buttonLog"
-                                onClick={() => handleTextEdit(text)}
-                              >
-                                <FaEdit />
-                              </button>
-                              <button
-                                className="buttonLog"
-                                onClick={() => handleDeleteText(text._id)}
-                              >
-                                <MdDeleteForever />
-                              </button>
+                            <div className="detectionListMain">
+                              <div>
+                                <p>
+                                  <strong>User Id:</strong> {text.getUserID}
+                                </p>
+                                <p className="textDetection">
+                                  <strong>Detected text:</strong>{" "}
+                                  {text.textAnalysed}
+                                </p>
+                                <p>
+                                  <strong>Threat Category: None</strong>
+                                </p>
+                              </div>
+                              <div className="buttton">
+                                <button
+                                  className="buttonLog"
+                                  onClick={() => handleTextEdit(text)}
+                                >
+                                  <FaEdit />
+                                </button>
+                                <button
+                                  className="buttonLog"
+                                  onClick={() => handleDeleteText(text._id)}
+                                >
+                                  <MdDeleteForever />
+                                </button>
+                              </div>
                             </div>
                           </li>
                         ))
                     )}
                   </ul>
                 </div>
-              </div>
+              </div> */}
             </div>
           )}
 
@@ -581,43 +616,46 @@ const LogPage = () => {
                   <h1>Users</h1>
                 </div>
                 <div className="userInfo">
-                  <div></div>
                   <ul className="userEachListOne">
                     {user.map((users) => (
                       <li key={users._id} className="userEachList">
-                        <li>
-                          <strong>Name: </strong>
-                          {users.username}
-                        </li>
-                        <li>
-                          <strong>User ID: </strong>
-                          {users._id}
-                        </li>
-                        <div className="userButtons">
-                          <div>
-                            {users.isBlocked ? (
-                              <button
-                                className="userButton"
-                                onClick={() => handleUnblockUser(users._id)}
-                              >
-                                Unblock
-                              </button>
-                            ) : (
-                              <button
-                                className="userButton"
-                                onClick={() => handleBlockUser(users._id)}
-                              >
-                                Block
-                              </button>
-                            )}
+                        <div className="userDivCon">
+                          <div className="userDiv1">
+                            <li>
+                              <strong>Name: </strong>
+                              {users.username}
+                            </li>
+                            <li>
+                              <strong>User ID: </strong>
+                              {users._id}
+                            </li>
                           </div>
-                          <div>
-                            <button
-                              className="userButton"
-                              onClick={() => deleteUser(users._id)}
-                            >
-                              Remove
-                            </button>
+                          <div className="userButtons">
+                            <div>
+                              {users.isBlocked ? (
+                                <button
+                                  className="userButton"
+                                  onClick={() => handleUnblockUser(users._id)}
+                                >
+                                  Unblock
+                                </button>
+                              ) : (
+                                <button
+                                  className="userButton"
+                                  onClick={() => handleBlockUser(users._id)}
+                                >
+                                  Block
+                                </button>
+                              )}
+                            </div>
+                            <div>
+                              <button
+                                className="userButton"
+                                onClick={() => deleteUser(users._id)}
+                              >
+                                Remove
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </li>
@@ -633,39 +671,54 @@ const LogPage = () => {
       {/* Detection pop up*/}
       <div>
         <div className="popup" style={{ display: editMode ? "flex" : "none" }}>
-          <div className="popup-content">
+          <div className="popup-detection">
             {editMode && editing ? (
               <div>
-                <form onSubmit={handleSubmit}>
-                  <label htmlFor="">Edit Detected Item:</label>
-                  <input
-                    type="text"
-                    value={editing.itemDetected}
-                    onChange={(e) =>
-                      setEditing({ ...editing, itemDetected: e.target.value })
-                    }
-                  />
-                  <br />
-                  <label htmlFor="">Edit Confidence Score:</label>
-                  <input
-                    type="text"
-                    value={editing.confidenceScore}
-                    onChange={(e) =>
-                      setEditing({
-                        ...editing,
-                        confidenceScore: e.target.value,
-                      })
-                    }
-                  />
-                  <br />
-                  <input type="submit" />
-                  <button
-                    onClick={() => {
-                      setEditMode(false);
-                    }}
-                  >
-                    Close
-                  </button>
+                <form onSubmit={handleSubmit} className="formTextDetection">
+                  <div className="formtextTwo">
+                    <button
+                      className="closeText"
+                      onClick={() => {
+                        setEditMode(false);
+                      }}
+                    >
+                      <IoMdCloseCircle />
+                    </button>
+                  </div>
+                  <div className="formtextOneDetection">
+                    <label htmlFor="" className="textLabel">
+                      Edit Detected Item:
+                    </label>
+                    <input
+                      type="text"
+                      className="inputTextLabel"
+                      value={editing.itemDetected}
+                      onChange={(e) =>
+                        setEditing({ ...editing, itemDetected: e.target.value })
+                      }
+                    />
+                    <br />
+                    <label htmlFor="" className="textLabel">
+                      Edit Confidence Score:
+                    </label>
+                    <input
+                      type="text"
+                      className="inputTextLabel"
+                      value={editing.confidenceScore}
+                      onChange={(e) =>
+                        setEditing({
+                          ...editing,
+                          confidenceScore: e.target.value,
+                        })
+                      }
+                    />
+                    <br />
+                    <input
+                      type="submit"
+                      value="Save Changes"
+                      className="formSave"
+                    />
+                  </div>
                 </form>
               </div>
             ) : null}
@@ -681,26 +734,38 @@ const LogPage = () => {
         >
           <div className="popup-content">
             {textAnalysisEdit && textAnalysisEditing ? (
-              <form onSubmit={handleSubmitText}>
-                <label htmlFor="">Edit Detected User</label>
-                <input
-                  type="text"
-                  value={textAnalysisEditing.textAnalysed}
-                  onChange={(e) =>
-                    setTextAnalysisEditing({
-                      ...textAnalysisEditing,
-                      textAnalysed: e.target.value,
-                    })
-                  }
-                />
-                <input type="submit" />
-                <button
-                  onClick={() => {
-                    setTextAnalysisEdit(false);
-                  }}
-                >
-                  Close
-                </button>
+              <form onSubmit={handleSubmitText} className="formText">
+                <div className="formtextTwo">
+                  <button
+                    className="closeText"
+                    onClick={() => {
+                      setTextAnalysisEdit(false);
+                    }}
+                  >
+                    <IoMdCloseCircle />
+                  </button>
+                </div>
+                <div className="formtextOne">
+                  <label htmlFor="" className="textLabel">
+                    Modify Detected Text Below!!
+                  </label>
+                  <input
+                    type="text"
+                    value={textAnalysisEditing.textAnalysed}
+                    onChange={(e) =>
+                      setTextAnalysisEditing({
+                        ...textAnalysisEditing,
+                        textAnalysed: e.target.value,
+                      })
+                    }
+                    className="inputTextLabel"
+                  />
+                  <input
+                    type="submit"
+                    value="Save Changes"
+                    className="formSave"
+                  />
+                </div>
               </form>
             ) : null}
           </div>
