@@ -10,9 +10,9 @@ body {
   background-color: #17202a;
   padding: 8px;
   position: fixed;
-  top: 0; 
-  left: 0; 
-  width: 100%; 
+  top: 0;
+  left: 0;
+  width: 100%;
   z-index: 1000;
 }
 
@@ -23,7 +23,7 @@ li {
 .navbar > div,
 .navbar > span {
   margin: 4px;
-  padding: 10px; 
+  padding: 10px;
 }
 
 .nav-links {
@@ -41,7 +41,7 @@ li {
 }
 
 .nav-links li:hover {
-  color: #5dade2; 
+  color: #5dade2;
 }
 
 .link{
