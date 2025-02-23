@@ -4,10 +4,9 @@ import connectDB from "./config/db.js";
 import detectionRoutes from "./routes/detectionRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import textAnalysisRoutes from "./routes/textAnalysisRoutes.js";
+// import imageRoutes from "./routes/imageRoutes.js"
 import cors from "cors";
 
-
-//Initialised the Express App
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -24,7 +23,7 @@ app.use("/api/users", userRoutes);
 
 app.use("/api/analysis", textAnalysisRoutes);
 
-
+// app.use("/api/images", imageRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
