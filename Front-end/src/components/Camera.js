@@ -44,6 +44,7 @@ const Camera = () => {
   };
 
   const getVideoListener = () => {
+    console.log("getvideolister")
     videoRef.current.addEventListener("loadeddata", () => {
       if (modelRef.current) {
         detectObjects(modelRef.current);
@@ -55,11 +56,10 @@ const Camera = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
     }
-    console.log(stream.getTracks())
+    console.log(stream.getTracks());
   };
 
   const handleDetection = async () => {
-    console.log("handle detection called")
     if (isDetecting) {
       stopRecording();
       setIsDetecting(false);
@@ -74,7 +74,7 @@ const Camera = () => {
     if (videoRef.current && videoRef.current.readyState >= 2) {
       const predictions = await model.detect(videoRef.current);
       drawPredictions(predictions);
-      confidenceScore(predictions);  
+      confidenceScore(predictions);
 
       const detected = predictions.some(
         (prediction) =>
@@ -105,9 +105,8 @@ const Camera = () => {
     const video = videoRef.current;
     const context = canvas.getContext("2d");
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-    console.log(predictions)
+    console.log(predictions);
     predictions.forEach((prediction) => {
-      
       context.beginPath();
       context.rect(
         prediction.bbox[0],
@@ -133,7 +132,7 @@ const Camera = () => {
         );
 
         const image = canvas.toDataURL("image/jpeg");
-        setDetectionImage(image);    
+        setDetectionImage(image);
       }
     });
   };
@@ -152,19 +151,21 @@ const Camera = () => {
 
   useEffect(() => {
     let intervalId;
-    if (isDetecting && (item === "bottle" || item === "cell phone")) {  
+    if (isDetecting && (item === "bottle" || item === "cell phone")) {
       intervalId = setInterval(() => {
         const getUser = localStorage.getItem("auth");
         const getUserID = getUser ? JSON.parse(getUser) : null;
-  
+
         if (!getUserID || !getUserID.userId) {
           console.log("User ID not found! Skipping send.");
           return;
         }
-  
+
         const sendDetectionData = async () => {
           if (!item || !conScore) {
-            console.log("Skipping send due to missing item or confidence score.");
+            console.log(
+              "Skipping send due to missing item or confidence score."
+            );
             return;
           }
           const detectionData = {
@@ -174,21 +175,24 @@ const Camera = () => {
             image: detectionImage,
             timestamp: new Date(),
           };
-  
+
           try {
-            const response = await fetch("http://localhost:5001/api/detections", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(detectionData),
-            });
-  
+            const response = await fetch(
+              "http://localhost:5001/api/detections",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(detectionData),
+              }
+            );
+
             if (!response.ok) {
               throw new Error("Failed to send data");
             }
-  
+
             const result = await response.json();
             console.log("Detection Sent Successfully:", result);
-  
+
             if (result.isBlocked) {
               alert("You have been blocked due to a violation.");
               localStorage.setItem(
@@ -201,12 +205,12 @@ const Camera = () => {
             console.error("Error sending detection:", error);
           }
         };
-  
+
         sendDetectionData();
       }, 3);
     }
     return () => clearInterval(intervalId);
-  }, [item, conScore, isDetecting]); 
+  }, [item, conScore, isDetecting]);
 
   return (
     <div className="cameraMainContainer">
@@ -220,7 +224,7 @@ const Camera = () => {
           <div>
             {message && (
               <div
-              className="detection-message"
+                className="detection-message"
                 style={{
                   top: 0,
                   left: 0,
