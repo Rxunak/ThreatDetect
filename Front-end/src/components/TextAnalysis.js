@@ -55,16 +55,13 @@ const TextAnalysis = () => {
 
       setAnalysisResult(predictions);
       sendAnalysedData(inputValue, predictions);
-
       setChatHistory((prevChatHistory) => {
         const updatedChat = [
           ...prevChatHistory,
           { messageInput: inputValue, analysis: predictions },
         ];
-
         return updatedChat;
       });
-
       setInputValue("");
     } else {
       console.log("Model is not loaded or input is empty!");
