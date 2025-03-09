@@ -55,10 +55,16 @@ const TextAnalysis = () => {
 
       setAnalysisResult(predictions);
       sendAnalysedData(inputValue, predictions);
-      setChatHistory([
-        ...chatHistory,
-        { messageInput: inputValue, analysis: predictions },
-      ]);
+
+      setChatHistory((prevChatHistory) => {
+        const updatedChat = [
+          ...prevChatHistory,
+          { messageInput: inputValue, analysis: predictions },
+        ];
+
+        return updatedChat;
+      });
+
       setInputValue("");
     } else {
       console.log("Model is not loaded or input is empty!");
@@ -119,7 +125,7 @@ const TextAnalysis = () => {
       console.log("Error while sending data to the backend", error);
     }
   };
-
+  
   const OpenCamera = () => {
     setTurnCameraOn(true);
   };
@@ -147,9 +153,7 @@ const TextAnalysis = () => {
                       <p className="chattext">{chat.messageInput}</p>
                       {filteredLabels && (
                         <p className="threat">
-                          <li>
-                            *This text contains: <b>{filteredLabels}</b>*
-                          </li>
+                          *This text contains: <b>{filteredLabels}</b>*
                         </p>
                       )}
                     </li>
