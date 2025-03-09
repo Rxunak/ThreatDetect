@@ -44,7 +44,6 @@ const Camera = () => {
   };
 
   const getVideoListener = () => {
-    console.log("getvideolister")
     videoRef.current.addEventListener("loadeddata", () => {
       if (modelRef.current) {
         detectObjects(modelRef.current);
@@ -56,7 +55,6 @@ const Camera = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
     }
-    console.log(stream.getTracks());
   };
 
   const handleDetection = async () => {
