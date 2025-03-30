@@ -99,7 +99,6 @@ const Camera = () => {
   };
 
   const drawPredictions = (predictions) => {
-    console.log(predictions)
     const canvas = canvasRef.current;
     const video = videoRef.current;
     const context = canvas.getContext("2d");
@@ -121,7 +120,6 @@ const Camera = () => {
       const font = (context.font = prediction.class);
       context.fillText(font, prediction.bbox[0], prediction.bbox[1]);
     
-
       if (prediction.class === "bottle" || prediction.class === "cell phone") {
         context.drawImage(
           video,
@@ -147,7 +145,6 @@ const Camera = () => {
       finalconfidence = `${parseFloat(getConf.score * 100).toFixed(2)}%`;
     }
     setConScore(finalconfidence);
-
   };
 
   useEffect(() => {

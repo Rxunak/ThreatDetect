@@ -36,7 +36,6 @@ const LogPage = () => {
         const response = await fetch("http://localhost:5001/api/analysis");
         const data = await response.json();
         setTextAnalysis(data);
-        console.log(data)
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
@@ -50,7 +49,6 @@ const LogPage = () => {
         const response = await fetch("http://localhost:5001/api/users/users");
         const data = await response.json();
         setUser(data);
-        console.log(data);
       } catch (error) {
         console.log("Error while fetching the data", error);
       }

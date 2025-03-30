@@ -105,7 +105,6 @@ const TextAnalysis = () => {
       }
 
       const resData = await response.json();
-      console.log("Text Detection sent succesfully", resData)
 
       if (resData.isBlocked) {
         alert("You have been blocked due to a violation");
