@@ -59,7 +59,7 @@ const Signup = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(inputFields), // Sending the input fields (username, email, password) to the backend
+      body: JSON.stringify(inputFields),
     });
 
     const data = await response.json();

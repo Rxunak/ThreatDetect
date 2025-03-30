@@ -1,5 +1,3 @@
-// This file defines the endpoint UTLS that trigger the actions like Save data
-// get data from my controller
 import express from "express";
 import {
   saveDetection,

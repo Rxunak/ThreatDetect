@@ -1,4 +1,3 @@
-// This file holds the logic for handling requests and responses for different routes
 import Detection from "../models/Detection.js";
 
 import { sendEmailAlert } from "../Email/EmailRoute.js";
@@ -15,7 +14,7 @@ export const saveDetection = async (req, res) => {
       "New Detection Alert",
       `A new detection has been identified: ${itemDetected} by user ${getUserID}`
     );
-
+ 
     let isBlocked = false;
     if (itemDetected.toLowerCase() === "bottle" && confidenceScore >='80%' || itemDetected.toLowerCase() === "cell phone" && confidenceScore >='80%'){
 

@@ -1,6 +1,5 @@
 import Navbar from "../components/Navbar";
 import TextAnalysis from "../components/TextAnalysis";
-import Footer from "../components/Footer";
 
 const TextualAnalysisPage = () => {
   return (

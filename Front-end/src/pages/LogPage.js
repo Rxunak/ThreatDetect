@@ -23,7 +23,6 @@ const LogPage = () => {
         const response = await fetch("http://localhost:5001/api/detections");
         const data = await response.json();
         setDetectionData(data);
-        console.log(data);
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
@@ -37,6 +36,7 @@ const LogPage = () => {
         const response = await fetch("http://localhost:5001/api/analysis");
         const data = await response.json();
         setTextAnalysis(data);
+        console.log(data)
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
@@ -50,6 +50,7 @@ const LogPage = () => {
         const response = await fetch("http://localhost:5001/api/users/users");
         const data = await response.json();
         setUser(data);
+        console.log(data);
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
@@ -271,6 +272,25 @@ const LogPage = () => {
   const totalReviewBlocked = textAnalysis.filter(
     (text) => text.analysis.length === 0
   ).length;
+
+  const currentDate = (date) => {
+    const d = new Date(date);
+
+    let day = d.getDate();
+    let month = d.getMonth() + 1;
+    let year = d.getFullYear();
+    let detectTime = d.getHours();
+    let minutes = d.getMinutes();
+    let seconds = d.getSeconds();
+
+    day = day < 10 ? "0" + day : day;
+
+    month = month < 10 ? "0" + month : month;
+
+    const newDate = `${day}/${month}/${year} ${detectTime}:${minutes}:${seconds}`;
+
+    return newDate;
+  };
   return (
     <div className="mainContainerLog">
       <Navbar />
@@ -357,17 +377,6 @@ const LogPage = () => {
                       <p>Blocked Text</p>
                     </div>
                   </div>
-
-                  <div className="blockedDetec">
-                    <div className="glanceTab">
-                      <div className="glanceTabs">
-                        <p>{totalReviewBlocked}</p>
-                      </div>
-                    </div>
-                    <div className="textTab">
-                      <p>Pending Text Review</p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -409,6 +418,10 @@ const LogPage = () => {
                                   <strong>Confidence Score: </strong>
                                   {detection.confidenceScore}
                                 </p>
+                                <p>
+                                  <strong>Detected at </strong>
+                                  {currentDate(detection.timestamp)}
+                                </p>
                                 <img
                                   src={detection.image}
                                   alt=""
@@ -416,12 +429,6 @@ const LogPage = () => {
                                 />
                               </div>
                               <div className="buttton">
-                                <button
-                                  className="buttonLog"
-                                  onClick={() => handleEdit(detection)}
-                                >
-                                  <FaEdit />
-                                </button>
                                 <button
                                   className="buttonLog"
                                   onClick={() => handleDelete(detection._id)}
@@ -470,6 +477,10 @@ const LogPage = () => {
                                   <strong>Confidence Score: </strong>
                                   {detection.confidenceScore}
                                 </p>
+                                <p>
+                                  <strong>Detected at </strong>
+                                  {currentDate(detection.timestamp)}
+                                </p>
                                 <img
                                   src={detection.image}
                                   alt=""
@@ -477,12 +488,6 @@ const LogPage = () => {
                                 />
                               </div>
                               <div className="buttton">
-                                <button
-                                  className="buttonLog"
-                                  onClick={() => handleEdit(detection)}
-                                >
-                                  <FaEdit />
-                                </button>
                                 <button
                                   className="buttonLog"
                                   onClick={() => handleDelete(detection._id)}
@@ -532,14 +537,12 @@ const LogPage = () => {
                                   <strong>Threat Category:</strong>{" "}
                                   {text.analysis.map((a) => a.label).join(", ")}
                                 </p>
+                                <p>
+                                  <strong>Detected at </strong>
+                                  {currentDate(text.timestamp)}
+                                </p>
                               </div>
                               <div className="buttton">
-                                <button
-                                  className="buttonLog"
-                                  onClick={() => handleTextEdit(text)}
-                                >
-                                  <FaEdit />
-                                </button>
                                 <button
                                   className="buttonLog"
                                   onClick={() => handleDeleteText(text._id)}
@@ -555,57 +558,6 @@ const LogPage = () => {
                   </ul>
                 </div>
               </div>
-              {/* <div className="reviewDetection">
-                <div className="detectHeading">
-                  <h3>Review Text</h3>
-                </div>
-                <div className="info">
-                  <ul className="eachListOne">
-                    {textAnalysis.filter((text) => text.analysis.length === 0)
-                      .length === 0 ? (
-                      <div className="noData">
-                        <h2>No Blocked Users </h2>
-                        {<FaRegSmile />}
-                      </div>
-                    ) : (
-                      textAnalysis
-                        .filter((text) => text.analysis.length === 0)
-                        .map((text) => (
-                          <li key={text._id} className="eachList">
-                            <div className="detectionListMain">
-                              <div>
-                                <p>
-                                  <strong>User Id:</strong> {text.getUserID}
-                                </p>
-                                <p className="textDetection">
-                                  <strong>Detected text:</strong>{" "}
-                                  {text.textAnalysed}
-                                </p>
-                                <p>
-                                  <strong>Threat Category: None</strong>
-                                </p>
-                              </div>
-                              <div className="buttton">
-                                <button
-                                  className="buttonLog"
-                                  onClick={() => handleTextEdit(text)}
-                                >
-                                  <FaEdit />
-                                </button>
-                                <button
-                                  className="buttonLog"
-                                  onClick={() => handleDeleteText(text._id)}
-                                >
-                                  <MdDeleteForever />
-                                </button>
-                              </div>
-                            </div>
-                          </li>
-                        ))
-                    )}
-                  </ul>
-                </div>
-              </div> */}
             </div>
           )}
 
@@ -628,6 +580,14 @@ const LogPage = () => {
                             <li>
                               <strong>User ID: </strong>
                               {users._id}
+                            </li>
+                            <li>
+                              <strong>Account creattion: </strong>
+                              {currentDate(users.createdAt)}
+                            </li>
+                            <li>
+                              <strong>Last Update: </strong>
+                              {currentDate(users.updatedAt)}
                             </li>
                           </div>
                           <div className="userButtons">

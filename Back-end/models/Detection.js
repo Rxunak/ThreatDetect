@@ -1,5 +1,3 @@
-// This file containes the schema and structure of my database collections.
-
 import mongoose from "mongoose";
 
 const detectionSchema = new mongoose.Schema({

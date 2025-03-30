@@ -1,6 +1,3 @@
-// This is my config file where i have all the configuration settings to my
-// database and middlware setups.
-
 import mongoose from "mongoose";
 
 const connectDB = async () => {
