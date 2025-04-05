@@ -396,7 +396,6 @@ const LogPage = () => {
                       </div>
                     ) : (
                       detectionData
-
                         .filter(
                           (detection) => detection.confidenceScore >= "80%"
                         )

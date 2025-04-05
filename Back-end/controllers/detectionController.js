@@ -16,7 +16,8 @@ export const saveDetection = async (req, res) => {
     );
  
     let isBlocked = false;
-    if (itemDetected.toLowerCase() === "bottle" && confidenceScore >='80%' || itemDetected.toLowerCase() === "cell phone" && confidenceScore >='80%'){
+    if (itemDetected.toLowerCase() === "bottle" && confidenceScore >='80%' 
+    || itemDetected.toLowerCase() === "cell phone" && confidenceScore >='80%'){
 
       const user = await User.findByIdAndUpdate(
         getUserID,

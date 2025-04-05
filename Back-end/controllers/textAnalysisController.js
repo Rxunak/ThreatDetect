@@ -24,7 +24,9 @@ export const saveAnalysis = async (req, res) => {
       }
 
       const subject = "Account Blocked Alert";
-      const text = `Dear Admin, the user ${newAnalysis.getUserID} has been blocked due to a violation detected in the text analysis and the detected text is ${newAnalysis.textAnalysed}.`;
+      const text = `Dear Admin, the user ${newAnalysis.getUserID} has 
+      been blocked due to a violation detected in the 
+      text analysis and the detected text is ${newAnalysis.textAnalysed}.`;
 
       try {
         await sendEmailAlert(user.email, subject, text); 
