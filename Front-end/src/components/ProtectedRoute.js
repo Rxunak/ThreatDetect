@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ element, requiredRole }) => {
+const ProtectedRoute = ({ element /*, requiredRole */ }) => {
   const auth = JSON.parse(localStorage.getItem("auth"));
 
   if (!auth?.isAuthenticated) {
@@ -12,9 +12,14 @@ const ProtectedRoute = ({ element, requiredRole }) => {
     return <Navigate to="/block" replace />;
   }
 
-  if (requiredRole && auth.role !== requiredRole) {
-    return <Navigate to="/" replace />;
-  }
+  // Demo mode for interview access:
+  // role-based restriction is intentionally disabled so any authenticated
+  // user can open all app sections, including the admin dashboard.
+  //
+  // Original role guard (kept for future re-enable):
+  // if (requiredRole && auth.role !== requiredRole) {
+  //   return <Navigate to="/" replace />;
+  // }
 
   return element;
 };

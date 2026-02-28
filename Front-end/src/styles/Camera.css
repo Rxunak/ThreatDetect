@@ -1,66 +1,164 @@
 .cameraMainContainer {
-  height: 100vh;
+  min-height: auto;
   display: flex;
   align-items: center;
-  flex-direction: column;
-  gap: 20px;
+  justify-content: center;
+  padding: 14px;
 }
 
 .firstContainerCam {
-  height: auto;
-  width: 90vh;
-  margin: 10px;
-  padding: 10px;
+  width: min(700px, 100%);
   display: flex;
-  gap: 10px;
+  justify-content: center;
+}
+
+.phone {
+  width: 100%;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 18px;
+  display: flex;
   flex-direction: column;
+  gap: 12px;
   align-items: center;
+}
+
+.cameraStatusRow {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.statusChip {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #cfe2ff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 10px;
+}
+
+.statusOk {
+  border-color: rgba(88, 214, 255, 0.55);
+  background: rgba(88, 214, 255, 0.2);
+  color: #e3f6ff;
 }
 
 .videoRef {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: min(560px, 100%);
+  aspect-ratio: 4 / 3;
   position: relative;
-  width: 500px;
-  height: 600px;
 }
 
-.videoRef1 {
+.videoRef1,
+.canRef {
   width: 100%;
   height: 100%;
+  border-radius: 12px;
   object-fit: cover;
-  border-radius: 20px;
 }
 
 .canRef {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
 }
 
-.phone {
+.emptyCameraState {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 10px;
-  padding: 10px;
-  border-radius: 10px;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(88, 214, 255, 0.16), transparent 40%),
+    linear-gradient(160deg, rgba(8, 16, 30, 0.82), rgba(11, 20, 35, 0.9));
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.emptyCameraIcon {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(88, 214, 255, 0.2);
+  border: 1px solid rgba(88, 214, 255, 0.45);
+  color: #8de6ff;
+  font-size: 1.25rem;
+}
+
+.emptyCameraState h3 {
+  font-size: 1.15rem;
+  color: #eef5ff;
+}
+
+.emptyCameraState p {
+  max-width: 42ch;
+  color: #b8cbe6;
+  line-height: 1.55;
+  font-size: 0.93rem;
+}
+
+.detection-message {
+  margin-top: 4px;
+  text-align: center;
+  font-weight: 700;
+  color: #ff9fb0;
 }
 
 .detectButton {
-  border: none;
-  height: 2rem;
-  border-radius: 1rem;
-  background-color: #1cb0f6;
-  font-family: "Courier New", Courier, monospace;
-  font-weight: bolder;
-  font-size: medium;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(120deg, var(--accent), var(--accent-strong));
+  color: #04253c;
+  font-weight: 800;
+  padding: 10px 16px;
+  cursor: pointer;
 }
 
-.detectButton:hover{
-  cursor: pointer;
+.detectButton:hover {
+  filter: brightness(1.05);
+}
+
+.detectButtonWrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 6px;
+}
+
+@media (max-width: 768px) {
+  .cameraMainContainer {
+    padding: 10px;
+  }
+
+  .phone {
+    padding: 12px;
+  }
+
+  .videoRef {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .detection-message {
+    font-size: 0.9rem;
+  }
+
+  .detectButton {
+    width: 100%;
+    max-width: 240px;
+  }
 }

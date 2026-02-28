@@ -48,7 +48,6 @@ const mockUsers = [
 ];
 
 jest.mock("../Navbar", () => () => <div data-testid="mock-navbar">Navbar</div>);
-jest.mock("../Footer", () => () => <div data-testid="mock-footer">Footer</div>);
 
 describe("Log Page Component", () => {
   let wrapper;

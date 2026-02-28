@@ -11,6 +11,16 @@ const PORT = process.env.PORT || 5001;
 
 dotenv.config();
 
+const requiredEnvVars = ["MONGO_URI", "EMAIL_USERNAME", "EMAIL_PASSWORD"];
+const missingEnvVars = requiredEnvVars.filter((name) => !process.env[name]);
+
+if (missingEnvVars.length > 0) {
+  console.error(
+    `Missing required environment variables: ${missingEnvVars.join(", ")}`
+  );
+  process.exit(1);
+}
+
 connectDB();
 
 app.use(express.json());
@@ -25,9 +35,3 @@ app.use("/api/analysis", textAnalysisRoutes);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-console.log("EMAIL_USERNAME:", process.env.EMAIL_USERNAME);
-console.log(
-  "EMAIL_PASSWORD:",
-  process.env.EMAIL_PASSWORD ? "Loaded" : "Not Loaded"
-);

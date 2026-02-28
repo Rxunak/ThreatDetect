@@ -1,7 +1,8 @@
 import "../styles/Login.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [inputFields, setInputFields] = useState({
@@ -48,7 +49,7 @@ const Login = () => {
     }
   };
 
-  const finishSubmit = async () => {
+  const finishSubmit = useCallback(async () => {
     const response = await fetch("http://localhost:5001/api/users/login", {
       method: "POST",
       headers: {
@@ -87,13 +88,13 @@ const Login = () => {
         autoClose: 1000
       })
     }
-  };
+  }, [inputFields, navigate]);
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && submitting) {
       finishSubmit();
     }
-  }, [errors, submitting]);
+  }, [errors, submitting, finishSubmit]);
 
   return (
     <div className="loginMain">

@@ -7,8 +7,6 @@ import TextualAnalysisPage from "./pages/TextualAnalysisPage";
 import Login from "./components/Login";
 import Signup from "./components/SignUp";
 import BlockedRedirect from "./pages/BlockedRedirect";
-
-
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -32,7 +30,12 @@ function App() {
           <Route
             path="/log-page"
             element={
-              <ProtectedRoute element={<LogPage />} requiredRole="admin" />
+              <>
+                <ProtectedRoute element={<LogPage />} />
+                {/* Original admin-only route guard kept for future use:
+                <ProtectedRoute element={<LogPage />} requiredRole="admin" />
+                */}
+              </>
             }
           />
         </Routes>

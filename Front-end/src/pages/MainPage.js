@@ -1,32 +1,52 @@
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-
 import "../styles/MainPage.css";
-
 import image from "../assets/Image.png";
-import Footer from "../components/Footer";
 
 const MainPage = () => {
   return (
     <div>
       <Navbar />
-      <div className="mainContainer">
-        <div className="firstContainer">
+      <main className="mainContainer">
+        <section className="firstContainer">
           <div className="heading">
-            <h1 className="h1Heading">Welcome to Threat Detect</h1>
+            <p className="eyebrow">AI Safety Platform</p>
+            <h1 className="h1Heading">Detect harmful content before it spreads.</h1>
             <p className="headingDescription">
-              At Threat Detect, we specialize in real-time detection of knives,
-              weapons, and sharp objects in live video streams. Our mission is
-              to provide a safer environment on social media platforms by
-              identifying dangerous content and offensive language in real time.
+              ThreatDetect combines live visual detection and text analysis to identify risky behavior,
+              support moderation teams, and improve digital safety in real time.
             </p>
           </div>
-        </div>
 
-        <div className="secondaryContainer">
-          <img src={image} alt="" className="image" />
-        </div>
-      </div>
-      <Footer />
+          <div className="button1">
+            <Link to="/live-detection" className="live1">
+              Start Live Scan
+            </Link>
+            <Link to="/texttual-analysis-page" className="text1">
+              Analyze Text
+            </Link>
+          </div>
+
+          <div className="featureStrip">
+            <div className="featureCard">
+              <h3>Real-time</h3>
+              <p>Continuous webcam object monitoring.</p>
+            </div>
+            <div className="featureCard">
+              <h3>Text Signals</h3>
+              <p>Instant threat phrase flagging.</p>
+            </div>
+            <div className="featureCard">
+              <h3>Admin Review</h3>
+              <p>Centralized logs and account actions.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="secondaryContainer">
+          <img src={image} alt="Threat detection dashboard illustration" className="image" />
+        </section>
+      </main>
     </div>
   );
 };

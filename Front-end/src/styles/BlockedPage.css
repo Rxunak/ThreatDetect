@@ -1,88 +1,103 @@
 .mainBlockPage {
+  min-height: 100dvh;
+  width: min(900px, calc(100% - 24px));
+  margin: 18px auto;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  padding: 1rem;
+  justify-content: center;
 }
 
 .secondMainPage {
-  height: 500px;
-  width: 500px;
-  padding: 1rem;
-  background-color: #b0d6ef;
-  border-radius: 6px;
+  width: min(720px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(18, 29, 50, 0.88), rgba(13, 22, 38, 0.92));
+  box-shadow: var(--shadow);
+  padding: 20px;
 }
 
-.blockPageHeading {
-  display: flex;
-  justify-content: center;
+.firstBlock {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 14px;
 }
 
-.blockPageImage {
-  display: flex;
-  justify-content: center;
+.blockPageHeading h1 {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
 }
 
 .blockPageImage1 {
-  height: 150px;
-  width: 150px;
-  border-radius: 5px;
+  width: 130px;
+  height: 130px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.secondBlock {
+  margin-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .blockPageText {
-  display: flex;
-  justify-content: center;
+  color: var(--text-muted);
+  line-height: 1.7;
 }
 
 .blockPageButton {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  height: 3rem;
+  gap: 10px;
 }
 
-.button1 {
-  border: none;
-  font-size: 2rem;
+.blockActionButton,
+.blockLogoutButton {
+  width: 46px;
+  height: 46px;
   border-radius: 10px;
-  display: flex;
-}
-
-.button1:hover {
+  border: 0;
   cursor: pointer;
-  background-color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  transition: filter 0.2s ease;
 }
 
-.button2 {
-  border: none;
-  font-size: 1.9rem;
-  border-radius: 10px;
-  display: flex;
+.blockActionButton {
+  background: rgba(88, 214, 255, 0.25);
+}
+
+.blockLogoutButton {
+  background: rgba(251, 113, 133, 0.25);
+  color: #ffd8de;
 }
 
 .button2css {
-  display: flex;
-  justify-content: center;
-  color: black;
+  color: #dff2ff;
+  display: inline-flex;
 }
 
-.button2:hover {
-  cursor: pointer;
-  background-color: white;
-}
+@media (max-width: 760px) {
+  .mainBlockPage {
+    width: calc(100% - 16px);
+    margin: 12px auto;
+  }
 
-.firstBlock {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  height: 350px;
-}
+  .secondMainPage {
+    padding: 16px;
+  }
 
-.secondBlock {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  height: 150px;
+  .firstBlock {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .blockPageImage {
+    display: flex;
+    justify-content: center;
+  }
 }

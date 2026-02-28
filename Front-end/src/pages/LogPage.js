@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import "../styles/LogDetection.css";
-import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { FaRegSmile } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -79,16 +77,6 @@ const LogPage = () => {
     } catch (error) {
       alert("An error occurred: " + error.message);
     }
-  };
-
-  const handleEdit = (detection) => {
-    setEditMode(true);
-    setEditing(detection);
-  };
-
-  const handleTextEdit = (text) => {
-    setTextAnalysisEdit(true);
-    setTextAnalysisEditing(text);
   };
 
   const handleSubmit = async (event) => {
@@ -265,10 +253,6 @@ const LogPage = () => {
 
   const totalTextBlocked = textAnalysis.filter(
     (text) => text.analysis.length >= 1
-  ).length;
-
-  const totalReviewBlocked = textAnalysis.filter(
-    (text) => text.analysis.length === 0
   ).length;
 
   const currentDate = (date) => {
@@ -728,8 +712,6 @@ const LogPage = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

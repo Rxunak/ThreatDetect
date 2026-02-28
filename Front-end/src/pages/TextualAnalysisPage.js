@@ -5,9 +5,7 @@ const TextualAnalysisPage = () => {
   return (
     <div>
       <Navbar />
-      <div>
-        <TextAnalysis />
-      </div>
+      <TextAnalysis />
     </div>
   );
 };

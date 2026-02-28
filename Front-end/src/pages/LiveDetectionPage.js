@@ -1,6 +1,5 @@
 import Camera from "../components/Camera";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import "../styles/LiveDetectionPage.css";
 
 const LiveDetectionPage = () => {
@@ -10,7 +9,6 @@ const LiveDetectionPage = () => {
       <div className="liveContainerPage">
         <Camera />
       </div>
-      <Footer />
     </div>
   );
 };

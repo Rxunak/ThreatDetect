@@ -1,3 +1,16 @@
 .liveContainerPage {
-  height: 100vh;
+  width: min(760px, calc(100% - 24px));
+  margin: 18px auto;
+  min-height: auto;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(135deg, rgba(18, 29, 50, 0.86), rgba(13, 21, 38, 0.9));
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 768px) {
+  .liveContainerPage {
+    width: calc(100% - 16px);
+    margin: 12px auto;
+  }
 }

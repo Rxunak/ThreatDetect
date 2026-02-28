@@ -1,6 +1,6 @@
 import "../styles/SignUp.css";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -53,7 +53,7 @@ const Signup = () => {
     }
   };
 
-  const finishSubmit = async () => {
+  const finishSubmit = useCallback(async () => {
     const response = await fetch("http://localhost:5001/api/users/signup", {
       method: "POST",
       headers: {
@@ -72,13 +72,13 @@ const Signup = () => {
       setSubmitting(false);
       setSignUpError(data.message);
     }
-  };
+  }, [inputFields, navigate]);
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && submitting) {
       finishSubmit();
     }
-  }, [errors, submitting]);
+  }, [errors, submitting, finishSubmit]);
 
   return (
     <div className="signupMain">

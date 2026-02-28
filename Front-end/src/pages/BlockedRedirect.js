@@ -34,13 +34,13 @@ const BlockedRedirect = () => {
           </div>
 
           <div className="blockPageButton">
-            <button className="button1">
+            <button className="blockActionButton">
               <a className="button2css" href="mailto:raunakuk2016@gmail.com">
                 <MdContactSupport />
               </a>
             </button>
 
-            <button className="button2" onClick={handleLogout}>
+            <button className="blockLogoutButton" onClick={handleLogout}>
               <IoLogOutSharp />
             </button>
           </div>

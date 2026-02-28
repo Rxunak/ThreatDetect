@@ -1,39 +1,64 @@
 import "../styles/Navbar.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem("auth");
     navigate("/login");
   };
+
   return (
-    <div className="navbar">
-      <span className="logo">THREAT DETECT</span>
-      <div className="nav-links">
-        <li>
-          <Link to="/" className="link">
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link to="/texttual-analysis-page" className="link">
-            Let's Chat
-          </Link>
-        </li>
-        <li>
-          <Link to="/log-page" className="link">
-            Log Detection
-          </Link>
-        </li>
-      </div>
+    <header className="navbar">
+      <Link to="/" className="logo" aria-label="Threat Detect home">
+        ThreatDetect
+      </Link>
+
+      <nav>
+        <ul className="nav-links">
+          <li>
+            <NavLink
+              to="/"
+              className={({ isActive }) => `link ${isActive ? "link-active" : ""}`}
+              end
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/live-detection"
+              className={({ isActive }) => `link ${isActive ? "link-active" : ""}`}
+            >
+              Live Detection
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/texttual-analysis-page"
+              className={({ isActive }) => `link ${isActive ? "link-active" : ""}`}
+            >
+              Text Analysis
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/log-page"
+              className={({ isActive }) => `link ${isActive ? "link-active" : ""}`}
+            >
+              Admin Logs
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
 
       <div className="buttonDiv">
         <button className="contact" onClick={handleLogout}>
           Log out
         </button>
       </div>
-    </div>
+    </header>
   );
 };
 

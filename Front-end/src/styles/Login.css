@@ -1,133 +1,144 @@
-body {
-  margin: 0px;
-  padding: 0px;
-}
-
 .loginMain {
+  min-height: 100dvh;
   height: 100vh;
-  padding: 0px;
-  display: flex;
-  justify-content: center;
+  width: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: rgba(9, 15, 28, 0.85);
 }
 
 .firstDiv {
-  height: 100vh;
-  width: 40%;
-  background-color: #5dade2;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(88, 214, 255, 0.3), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(0, 166, 245, 0.25), transparent 45%),
+    linear-gradient(140deg, #122344, #0f1a31);
+  position: relative;
+}
+
+.firstDiv::before {
+  content: "ThreatDetect";
+  position: absolute;
+  left: 28px;
+  bottom: 26px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #f3f8ff;
 }
 
 .secondDiv {
-  height: 100vh;
-  width: 60%;
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-
-.secondDivForm {
-  display: flex;
   justify-content: center;
-  flex-direction: column;
-  height: auto;
-  width: 500px;
+  padding: 28px;
 }
 
-.formHeading {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.formH1 {
-  margin-bottom: 0px;
-  font-family: "Roboto", sans-serif;
-  color: #5dade2;
-}
-
-.formP {
-  font-family: "Roboto", sans-serif;
-  font-weight: bolder;
-}
-
+.secondDivForm,
 .formDiv {
-  height: auto;
-  width: 500px;
+  width: min(460px, 100%);
 }
 
 .form {
   display: flex;
-  justify-content: space-evenly;
   flex-direction: column;
-  width: auto;
-  height: 460px;
 }
 
 .fieldName {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: 460px;
+  gap: 16px;
 }
 
-.input {
-  font-weight: bolder;
+.formHeading {
+  text-align: left;
+  align-items: flex-start;
 }
 
-.label {
-  height: 100px;
+.formH1 {
+  color: #eef4ff;
+  font-size: 2rem;
 }
 
-.emailDiv {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  width: 450px;
-  height: 70px;
+.formP {
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-weight: 500;
 }
 
+.emailDiv,
 .passwordDiv {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  width: 450px;
-  height: 70px;
+  gap: 8px;
+}
+
+.input {
+  color: #d7e5f9;
+  font-weight: 700;
+  font-size: 0.93rem;
+}
+
+.label {
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  padding: 0 12px;
+  outline: none;
+}
+
+.label::placeholder {
+  color: #9eb0cc;
+}
+
+.label:focus {
+  border-color: rgba(88, 214, 255, 0.7);
 }
 
 .buttonForm {
-  width: 450px;
-  height: 50px;
-  border-radius: 5px;
-  background-color: #5dade2;
-  border: none;
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  border: 0;
+  background: linear-gradient(120deg, var(--accent), var(--accent-strong));
+  color: #03253d;
+  font-weight: 800;
+  cursor: pointer;
 }
 
-/* .redirectSignup {
-  border: 2px solid black;
-  width: 500px;
-  height: 200px;
-} */
-
-.loginSecond {
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  height: 200px;
-  justify-content: center;
-  align-items: center;
-}
-
-.loginSecond > input {
-  width: 200px;
-}
-
-.loginSecond > button {
-  width: 200px;
+.buttonForm:hover {
+  filter: brightness(1.05);
 }
 
 .error {
-  color: #5dade2;
-  margin: 0px;
-  font-size: 14px;
+  color: var(--danger);
+  font-size: 0.83rem;
+}
+
+@media (max-width: 880px) {
+  .loginMain {
+    grid-template-columns: 1fr;
+  }
+
+  .firstDiv {
+    display: none;
+  }
+
+  .secondDiv {
+    padding: 20px 14px;
+  }
+
+  .formH1 {
+    font-size: 1.7rem;
+  }
+
+  .formP {
+    font-size: 0.95rem;
+  }
 }

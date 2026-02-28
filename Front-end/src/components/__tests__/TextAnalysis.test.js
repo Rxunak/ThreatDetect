@@ -3,32 +3,6 @@ import { mount } from "enzyme";
 import { act } from "react";
 import TextAnalysis from "../TextAnalysis";
 
-
-jest.mock("@tensorflow-models/toxicity", () => ({
-    load: jest.fn(() =>
-      Promise.resolve({
-        classify: jest.fn(() =>
-          Promise.resolve([
-            {
-              label: "toxicity",
-              results: [{ match: true, probabilities: [0.1, 0.9] }],
-            },
-            {
-              label: "obscene",
-              results: [{ match: true, probabilities: [0.2, 0.8] }],
-            },
-            {
-              label: "insult",
-              results: [{ match: true, probabilities: [0.3, 0.7] }],
-            },
-          ])
-        ),
-      })
-    ),
-  }));
-
-jest.mock("@tensorflow/tfjs", () => ({}));
-
 jest.mock("../Camera", () => {
   return function DummyCamera() {
     return <div data-testid="mock-camera">Camera Component</div>;

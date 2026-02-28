@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
-import * as toxicity from "@tensorflow-models/toxicity";
-import * as tf from "@tensorflow/tfjs";
+import { useState } from "react";
 import "../styles/TextAnalysis.css";
 import Camera from "../components/Camera";
-import chat from "../assets/deltabackground.jpg";
 import { FaCamera } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -11,49 +8,50 @@ import { IoMdCloseCircle } from "react-icons/io";
 const TextAnalysis = () => {
   const [inputValue, setInputValue] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
-  const [model, setModel] = useState(null);
-  const [analysisResult, setAnalysisResult] = useState([]);
   const [turnCameraOn, setTurnCameraOn] = useState(false);
-
-  useEffect(() => {
-    const loadModel = async () => {
-      const threshold = 0.7;
-      const model = await toxicity.load(threshold);
-      setModel(model);
-    };
-
-    loadModel();
-  }, []);
 
   const onChange = (e) => {
     setInputValue(e.target.value);
   };
 
-  const fallbackText = (text) => {
-    const toxicText = [
-      "i hate you",
-      "watch your back",
-      "you are going to regret this",
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      textAnalyse();
+    }
+  };
+
+  const analyzeText = (text) => {
+    const phraseRules = [
+      { phrase: "i hate you", label: "toxicity", confidence: 0.92 },
+      { phrase: "watch your back", label: "threat", confidence: 0.95 },
+      { phrase: "you are going to regret this", label: "threat", confidence: 0.94 },
+      { phrase: "idiot", label: "insult", confidence: 0.84 },
+      { phrase: "stupid", label: "insult", confidence: 0.82 },
+      { phrase: "kill", label: "threat", confidence: 0.9 },
     ];
-    const isTextToxic = toxicText.some((phrase) =>
-      text.toLowerCase().includes(phrase)
-    );
-    return isTextToxic;
+
+    const normalizedText = text.toLowerCase();
+    const matches = [];
+    const seenLabels = new Set();
+
+    phraseRules.forEach((rule) => {
+      if (normalizedText.includes(rule.phrase) && !seenLabels.has(rule.label)) {
+        matches.push({
+          label: rule.label,
+          results: [{ match: true, probabilities: [1 - rule.confidence, rule.confidence] }],
+        });
+        seenLabels.add(rule.label);
+      }
+    });
+
+    return matches;
   };
 
   const textAnalyse = async () => {
-    if (model && inputValue) {
-      const predictions = await model.classify([inputValue]);
-      const isFallbacktext = fallbackText(inputValue);
+    if (inputValue) {
+      const predictions = analyzeText(inputValue);
 
-      if (isFallbacktext) {
-        predictions.push({
-          label: "toxicText",
-          results: [{ match: true }],
-        });
-      }
-
-      setAnalysisResult(predictions);
       sendAnalysedData(inputValue, predictions);
       setChatHistory((prevChatHistory) => {
         const updatedChat = [
@@ -64,7 +62,7 @@ const TextAnalysis = () => {
       });
       setInputValue("");
     } else {
-      console.log("Model is not loaded or input is empty!");
+      console.log("Input is empty!");
     }
   };
 
@@ -135,7 +133,7 @@ const TextAnalysis = () => {
     <div className="textMainContainer">
       <div className="detectionContainer">
         <div className="chatHead" />
-        <div className="chatBody" style={{ backgroundImage: `url(${chat})` }}>
+        <div className="chatBody">
           <div className="chat">
             <ul className="chatOutput">
               {chatHistory &&
@@ -165,6 +163,7 @@ const TextAnalysis = () => {
                 type="text"
                 value={inputValue}
                 onChange={onChange}
+                onKeyDown={handleKeyDown}
                 placeholder="Type...."
                 className="text"
               />
