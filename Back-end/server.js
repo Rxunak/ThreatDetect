@@ -6,10 +6,10 @@ import userRoutes from "./routes/userRoutes.js";
 import textAnalysisRoutes from "./routes/textAnalysisRoutes.js";
 import cors from "cors";
 
+dotenv.config();
+
 const app = express();
 const PORT = process.env.PORT || 5001;
-
-dotenv.config();
 
 const requiredEnvVars = ["MONGO_URI", "EMAIL_USERNAME", "EMAIL_PASSWORD"];
 const missingEnvVars = requiredEnvVars.filter((name) => !process.env[name]);
